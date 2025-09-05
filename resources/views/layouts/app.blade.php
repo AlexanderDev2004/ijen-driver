@@ -12,7 +12,7 @@
         <div class="max-w-5xl mx-auto px-4 py-4 flex items-center justify-between">
             <a href="{{ route('welcome') }}" class="font-semibold">{{ config('app.name') }}</a>
             <nav class="space-x-4">
-                <a class="hover:underline" href="{{ route('booking.form') }}">Book Tour</a>
+                <a class="hover:underline" href="{{ route('trips.index') }}">Login</a>
                 <a class="hover:underline" href="{{ route('trips.index') }}">Trip Results</a>
             </nav>
         </div>
