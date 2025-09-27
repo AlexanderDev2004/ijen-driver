@@ -1,0 +1,69 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Tour {
+  id          Int       @id @default(autoincrement())
+  title       String    @db.VarChar(150)
+  slug        String    @unique @db.VarChar(150)
+  description String
+  requirements String?
+  imageUrl    String?   @db.VarChar(255)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  bookings    Booking[]
+}
+
+model Booking {
+  id            Int       @id @default(autoincrement())
+  tourId        Int
+  name          String    @db.VarChar(100)
+  email         String    @db.VarChar(100)
+  phone         String    @db.VarChar(20)
+  departureDate DateTime
+  totalPeople   Int
+  hasChildren   Boolean   @default(false)
+  childrenCount Int       @default(0)
+  status        BookingStatus @default(pending)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  tour Tour @relation(fields: [tourId], references: [id], onDelete: Cascade)
+}
+
+enum BookingStatus {
+  pending
+  confirmed
+  cancelled
+}
+
+model Journal {
+  id        Int      @id @default(autoincrement())
+  title     String   @db.VarChar(150)
+  slug      String   @unique @db.VarChar(150)
+  content   String
+  imageUrl  String?  @db.VarChar(255)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model AdminUser {
+  id        Int      @id @default(autoincrement())
+  username  String   @unique @db.VarChar(50)
+  password  String   @db.VarChar(255)
+  email     String?  @db.VarChar(100)
+  createdAt DateTime @default(now())
+}

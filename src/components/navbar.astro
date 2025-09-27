@@ -1,0 +1,45 @@
+---
+import "../styles/global.css";
+import { RxHamburgerMenu } from "react-icons/rx";
+---
+
+<nav class="w-full bg-gray-950 text-gray-300 shadow-md">
+  <div class="max-w-7xl mx-auto flex justify-between items-center py-4 px-6">
+    
+    <a href="/" class="text-2xl font-extrabold text-amber-400 hover:text-amber-300 transition">
+      Ijen Driver
+    </a>
+
+  
+    <div class="hidden md:flex items-center gap-6">
+      <a href="/tours" class="hover:text-amber-300 transition">View Tours</a>
+      <a href="/journal" class="hover:text-amber-300 transition">Travel Journal</a>
+      <a href="/login" class="bg-amber-400 hover:bg-amber-500 text-gray-900 px-4 py-2 rounded-lg font-semibold transition">
+        Login
+      </a>
+    </div>
+
+    
+    <button id="menu-btn" class="md:hidden text-2xl focus:outline-none">
+      <RxHamburgerMenu />
+    </button>
+  </div>
+
+  
+  <div id="menu" class="hidden flex-col md:hidden bg-gray-900 px-6 pb-4 space-y-3">
+    <a href="/tours" class="block hover:text-amber-300 transition">View Tours</a>
+    <a href="/journal" class="block hover:text-amber-300 transition">Travel Journal</a>
+    <a href="/login" class="block bg-amber-400 hover:bg-amber-500 text-gray-900 px-4 py-2 rounded-lg font-semibold transition">
+      Login
+    </a>
+  </div>
+
+  <script>
+    const btn = document.getElementById("menu-btn");
+    const menu = document.getElementById("menu");
+
+    btn?.addEventListener("click", () => {
+      menu?.classList.toggle("hidden");
+    });
+  </script>
+</nav>
