@@ -1,0 +1,17 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { prisma } from "../../lib/prisma";
+
+const { slug } = Astro.params;
+const tour = await prisma.tour.findUnique({
+  where: { slug },
+});
+
+if (!tour) {
+  throw new Error(`Tour dengan slug "${slug}" tidak ditemukan`);
+}
+---
+
+<Layout>
+  <h1>{tour.title}</h1>
+</Layout>
