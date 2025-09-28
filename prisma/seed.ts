@@ -6,17 +6,23 @@ const prisma = new PrismaClient();
 async function main() {
   const hashedPassword = await bcrypt.hash("admin123", 10);
 
-  const admin = await prisma.user.upsert({
-    where: { username: "admin" },
-    update: {},
-    create: {
-      username: "admin",
-      password: hashedPassword,
-      email: "admin@ijen-driver.com",
-    },
+  await prisma.user.createMany({
+    data: [
+      {
+        username: "admin",
+        password: hashedPassword,
+        email: "admin@ijen-driver.com",
+      },
+      {
+        username: "demo",
+        password: await bcrypt.hash("demo123", 10),
+        email: "demo@ijen-driver.com",
+      },
+    ],
+    skipDuplicates: true,
   });
 
-  console.log("✅ Admin user created:", admin);
+  console.log("✅ Users seeded successfully");
 }
 
 main()
