@@ -1,51 +1,41 @@
 @extends('layouts.app')
 
-@section('title', 'Ijen Driver - Pilih Tour Favoritmu')
+@section('title', 'Ijen Driver - Jelajahi Alam Bersama Kami')
 
 @section('content')
-<div class="bg-gray-50 min-h-screen">
-    <div class="text-center py-16 bg-gradient-to-r from-blue-600 to-green-500 text-white">
-        <h1 class="text-5xl font-extrabold mb-4">Selamat Datang di Ijen Driver</h1>
-        <p class="text-lg mb-6">Temukan pengalaman tour terbaik bersama kami 🌋</p>
-        <a href="#tours" class="bg-white text-blue-700 px-5 py-3 rounded-lg font-semibold shadow hover:bg-blue-100 transition">
-            Lihat Paket Tour
-        </a>
+<div class="text-center py-16 bg-gradient-to-r from-indigo-600 to-teal-500 text-white">
+  <h1 class="text-5xl font-extrabold mb-3">Petualangan Dimulai di Sini 🌋</h1>
+  <p class="text-lg mb-6">Temukan pengalaman mendaki dan berwisata terbaik bersama Ijen Driver</p>
+  <a href="#tours" class="bg-white text-indigo-700 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition">Lihat Paket Tour</a>
+</div>
+
+<div id="tours" class="container mx-auto px-6 py-14">
+  <h2 class="text-3xl font-bold text-center text-gray-800 mb-10">Paket Tour Populer</h2>
+
+  @if($tours->count() > 0)
+    <div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+      @foreach($tours as $tour)
+        <div class="bg-white rounded-xl shadow hover:shadow-lg transition overflow-hidden">
+          @if($tour->image)
+            <img src="{{ asset('storage/'.$tour->image) }}" alt="{{ $tour->name }}" class="h-56 w-full object-cover">
+          @endif
+          <div class="p-5 flex flex-col justify-between h-full">
+            <div>
+              <h3 class="text-lg font-semibold text-gray-800 mb-2">{{ $tour->name }}</h3>
+              <p class="text-sm text-gray-600 mb-3">{{ \Str::limit($tour->description, 100) }}</p>
+            </div>
+            <div class="flex items-center justify-between mt-auto">
+              <span class="text-indigo-600 font-bold">Rp {{ number_format($tour->price, 0, ',', '.') }}</span>
+              <a href="{{ route('tour.show', $tour) }}" class="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 text-sm">Detail</a>
+            </div>
+          </div>
+        </div>
+      @endforeach
     </div>
 
-    <div id="tours" class="container mx-auto px-4 py-10">
-        <h2 class="text-3xl font-bold mb-6 text-center text-gray-800">Paket Tour Populer</h2>
-
-        @if(session('success'))
-            <div class="bg-green-100 text-green-700 p-3 rounded-lg mb-5 text-center">
-                {{ session('success') }}
-            </div>
-        @endif
-
-        @if($tours->count() > 0)
-            <div class="grid md:grid-cols-3 gap-6">
-                @foreach($tours as $tour)
-                    <div class="bg-white rounded-xl shadow hover:shadow-lg transition p-4">
-                        @if($tour->image)
-                            <img src="{{ asset('storage/'.$tour->image) }}" alt="{{ $tour->title }}" class="h-48 w-full object-cover rounded-md mb-3">
-                        @endif
-                        <h3 class="text-xl font-semibold mb-2 text-gray-800">{{ $tour->title }}</h3>
-                        <p class="text-gray-600 text-sm mb-3">{{ \Str::limit($tour->description, 120) }}</p>
-                        <div class="flex justify-between items-center">
-                            <span class="text-lg font-bold text-blue-700">Rp {{ number_format($tour->price, 0, ',', '.') }}</span>
-                            <a href="{{ route('tour.show', $tour) }}" class="bg-blue-600 text-white px-3 py-2 rounded-md hover:bg-blue-700 transition">
-                                Detail
-                            </a>
-                        </div>
-                    </div>
-                @endforeach
-            </div>
-
-            <div class="mt-10">
-                {{ $tours->links() }}
-            </div>
-        @else
-            <p class="text-center text-gray-600">Belum ada paket tour tersedia.</p>
-        @endif
-    </div>
+    <div class="mt-10">{{ $tours->links() }}</div>
+  @else
+    <p class="text-center text-gray-600">Belum ada paket tour tersedia.</p>
+  @endif
 </div>
 @endsection
