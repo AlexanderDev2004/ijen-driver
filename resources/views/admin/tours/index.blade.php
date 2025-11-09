@@ -34,8 +34,8 @@
                               <span class="text-red-600 font-medium">Nonaktif</span>
                           @endif
                       </td>
-                      <td class="px-4 py-2 border-b text-center">
-                          <a href="{{ route('admin.tours.edit', $tour->id) }}" class="text-indigo-600 hover:underline">Edit</a> |
+                      <td class="px-4 py-2 border-b text-center space-x-2">
+                          <a href="{{ route('admin.tours.edit', $tour->id) }}" class="text-indigo-600 hover:underline">Edit</a>
                           <form action="{{ route('admin.tours.destroy', $tour->id) }}" method="POST" class="inline">
                               @csrf
                               @method('DELETE')

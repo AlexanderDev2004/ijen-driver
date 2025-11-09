@@ -10,23 +10,31 @@
     @csrf
 
     <div>
-      <label class="block text-sm font-medium text-gray-700">Nama Tour</label>
-      <input type="text" name="name" class="mt-1 w-full rounded-md border-gray-300 focus:ring-indigo-500 focus:border-indigo-500" required>
+      <label class="block text-sm font-medium text-gray-700">Judul Tour</label>
+      <input type="text" name="title" value="{{ old('title') }}" class="mt-1 w-full rounded-md border-gray-300 focus:ring-indigo-500 focus:border-indigo-500" required>
+      @error('title') <p class="text-sm text-red-500 mt-1">{{ $message }}</p> @enderror
+    </div>
+
+    <div>
+      <label class="block text-sm font-medium text-gray-700">Lokasi</label>
+      <input type="text" name="location" value="{{ old('location') }}" class="mt-1 w-full rounded-md border-gray-300 focus:ring-indigo-500 focus:border-indigo-500">
     </div>
 
     <div>
       <label class="block text-sm font-medium text-gray-700">Harga</label>
-      <input type="number" name="price" class="mt-1 w-full rounded-md border-gray-300 focus:ring-indigo-500 focus:border-indigo-500" required>
+      <input type="number" name="price" value="{{ old('price') }}" class="mt-1 w-full rounded-md border-gray-300 focus:ring-indigo-500 focus:border-indigo-500" required>
+      @error('price') <p class="text-sm text-red-500 mt-1">{{ $message }}</p> @enderror
     </div>
 
     <div>
       <label class="block text-sm font-medium text-gray-700">Deskripsi</label>
-      <textarea name="description" rows="4" class="mt-1 w-full rounded-md border-gray-300 focus:ring-indigo-500 focus:border-indigo-500"></textarea>
+      <textarea name="description" rows="4" class="mt-1 w-full rounded-md border-gray-300 focus:ring-indigo-500 focus:border-indigo-500">{{ old('description') }}</textarea>
     </div>
 
     <div>
       <label class="block text-sm font-medium text-gray-700">Gambar</label>
       <input type="file" name="image" accept="image/*" class="mt-1 w-full text-sm text-gray-600">
+      @error('image') <p class="text-sm text-red-500 mt-1">{{ $message }}</p> @enderror
     </div>
 
     <div class="flex items-center gap-2">

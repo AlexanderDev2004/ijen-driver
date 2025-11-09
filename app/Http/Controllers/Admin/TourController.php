@@ -6,13 +6,14 @@ use App\Http\Controllers\Controller;
 use App\Models\Tour;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class TourController extends Controller
 {
 
     public function index()
     {
-        $tours = Tour::orderBy('created_at', 'desc')->get();
+        $tours = Tour::orderByDesc('created_at')->get();
         return view('admin.tours.index', compact('tours'));
     }
 
@@ -22,9 +23,7 @@ class TourController extends Controller
         return view('admin.tours.create');
     }
 
-    /**
-     * Simpan tour baru
-     */
+
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -42,11 +41,20 @@ class TourController extends Controller
         }
 
 
+        $slug = Str::slug($validated['title']);
+        $count = Tour::where('slug', 'like', "{$slug}%")->count();
+        if ($count > 0) {
+            $slug .= '-' . ($count + 1);
+        }
+
+        $validated['slug'] = $slug;
         $validated['is_active'] = $request->has('is_active');
 
         Tour::create($validated);
 
-        return redirect()->route('admin.tours.index')->with('success', 'Tour berhasil ditambahkan!');
+        return redirect()
+            ->route('admin.tours.index')
+            ->with('success', 'Tour berhasil ditambahkan!');
     }
 
 
@@ -69,15 +77,27 @@ class TourController extends Controller
         $tour = Tour::findOrFail($id);
 
         $validated = $request->validate([
-            'title' => 'sometimes|required|string|max:255',
+            'title' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'price' => 'sometimes|required|numeric|min:0',
+            'price' => 'required|numeric|min:0',
             'location' => 'nullable|string|max:255',
             'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
             'is_active' => 'nullable|boolean',
         ]);
 
 
+        $slug = Str::slug($validated['title']);
+        $count = Tour::where('slug', 'like', "{$slug}%")
+                    ->where('id', '!=', $tour->id)
+                    ->count();
+        if ($count > 0) {
+            $slug .= '-' . ($count + 1);
+        }
+
+        $validated['slug'] = $slug;
+        $validated['is_active'] = $request->has('is_active');
+
+        // Update gambar jika ada file baru
         if ($request->hasFile('image')) {
             if ($tour->image && Storage::disk('public')->exists($tour->image)) {
                 Storage::disk('public')->delete($tour->image);
@@ -85,11 +105,11 @@ class TourController extends Controller
             $validated['image'] = $request->file('image')->store('tours', 'public');
         }
 
-        $validated['is_active'] = $request->has('is_active');
-
         $tour->update($validated);
 
-        return redirect()->route('admin.tours.index')->with('success', 'Tour berhasil diperbarui!');
+        return redirect()
+            ->route('admin.tours.index')
+            ->with('success', 'Tour berhasil diperbarui!');
     }
 
 
@@ -103,6 +123,8 @@ class TourController extends Controller
 
         $tour->delete();
 
-        return redirect()->route('admin.tours.index')->with('success', 'Tour berhasil dihapus!');
+        return redirect()
+            ->route('admin.tours.index')
+            ->with('success', 'Tour berhasil dihapus!');
     }
 }
