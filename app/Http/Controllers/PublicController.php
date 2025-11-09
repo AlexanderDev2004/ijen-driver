@@ -1,0 +1,75 @@
+<?php
+namespace App\Http\Controllers;
+use Illuminate\Http\Request;
+use App\Models\Tour;
+use App\Models\Booking;
+
+class PublicController extends Controller {
+    public function index(){
+        $tours = Tour::where('is_active', true)->paginate(9);
+        return view('public.index', compact('tours'));
+    }
+
+    public function showTour(Tour $tour){
+        return view('public.tour', compact('tour'));
+    }
+
+    public function bookingForm(Tour $tour){
+        return view('public.booking', compact('tour'));
+    }
+
+    public function submitBooking(Request $r, Tour $tour){
+        $data = $r->validate([
+            'name'=>'required|string|max:191',
+            'phone'=>'nullable|string|max:30',
+            'date'=>'required|date|after_or_equal:today',
+            'people'=>'required|integer|min:1',
+            'has_children'=>'sometimes|in:on',
+            'children_count'=>'nullable|integer|min:0',
+            'notes'=>'nullable|string|max:1000',
+        ]);
+
+        $data['has_children'] = isset($data['has_children']) && $data['has_children']==='on';
+        if(!$data['has_children']) $data['children_count']=null;
+
+        $booking = Booking::create(array_merge($data, [
+            'tour_id' => $tour->id,
+            'status' => 'pending',
+        ]));
+
+        // show confirmation page (user can review)
+        return redirect()->route('booking.confirm', $booking->id);
+    }
+
+    public function bookingConfirm($id){
+        $booking = Booking::with('tour')->findOrFail($id);
+        return view('public.confirm', compact('booking'));
+    }
+
+    // when user clicks "Send to WhatsApp" to finalize
+    public function sendToWhatsApp($id){
+        $b = Booking::with('tour')->findOrFail($id);
+
+        // prepare message
+        $msg = "Booking IjenDriver\n".
+               "Tour: {$b->tour->title}\n".
+               "Nama: {$b->name}\n".
+               "Tanggal: {$b->date->format('Y-m-d')}\n".
+               "Orang: {$b->people}\n".
+               "Ada Anak: ".($b->has_children ? "Ya ({$b->children_count})" : "Tidak")."\n".
+               "Catatan: ".($b->notes ?? '-')."\n".
+               "ID Booking: {$b->id}";
+
+        // update status
+        $b->update(['status' => 'sent_to_wa']);
+
+        // URL encode message and redirect to whatsapp link (fill with your/owner phone number OR open with user's WA)
+        $encoded = urlencode($msg);
+        // If you want to send to owner number: use "https://wa.me/6281234567890?text={$encoded}"
+        // To let user choose: open web.whatsapp with prefilled text (web.whatsapp works via wa.me too)
+        $ownerNumber = env('WA_OWNER_NUMBER'); // set in .env (country code)
+        $waLink = "https://wa.me/{$ownerNumber}?text={$encoded}";
+
+        return redirect()->away($waLink);
+    }
+}
