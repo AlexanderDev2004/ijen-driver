@@ -7,75 +7,70 @@ use App\Models\Tour;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Exception;
 
 class TourController extends Controller
 {
-
     public function index()
     {
-        $tours = Tour::orderByDesc('created_at')->get();
+        $tours = Tour::latest()->get();
         return view('admin.tours.index', compact('tours'));
     }
-
 
     public function create()
     {
         return view('admin.tours.create');
     }
 
-
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'price' => 'required|numeric|min:0',
-            'location' => 'nullable|string|max:255',
-            'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
-            'is_active' => 'nullable|boolean',
-        ]);
+        try {
+            $validated = $request->validate([
+                'title' => 'required|string|max:255',
+                'description' => 'nullable|string',
+                'price' => 'required|numeric|min:0',
+                'location' => 'nullable|string|max:255',
+                'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+                'is_active' => 'nullable|boolean',
+            ]);
 
+            // ✅ Generate slug unik
+            $slug = Str::slug($validated['title']);
+            $baseSlug = $slug;
+            $count = 1;
+            while (Tour::where('slug', $slug)->exists()) {
+                $slug = "{$baseSlug}-{$count}";
+                $count++;
+            }
+            $validated['slug'] = $slug;
 
-        if ($request->hasFile('image')) {
-            $validated['image'] = $request->file('image')->store('tours', 'public');
+            // ✅ Upload image jika ada
+            if ($request->hasFile('image')) {
+                $validated['image'] = $request->file('image')->store('tours', 'public');
+            }
+
+            // ✅ Default aktif
+            $validated['is_active'] = $request->boolean('is_active', true);
+
+            // ✅ Simpan ke database
+            Tour::create($validated);
+
+            return redirect()->route('admin.tours.index')
+                ->with('success', 'Tour berhasil ditambahkan!');
+        } catch (Exception $e) {
+            return back()
+                ->withErrors(['error' => 'Gagal menyimpan Tour: ' . $e->getMessage()])
+                ->withInput();
         }
-
-
-        $slug = Str::slug($validated['title']);
-        $count = Tour::where('slug', 'like', "{$slug}%")->count();
-        if ($count > 0) {
-            $slug .= '-' . ($count + 1);
-        }
-
-        $validated['slug'] = $slug;
-        $validated['is_active'] = $request->has('is_active');
-
-        Tour::create($validated);
-
-        return redirect()
-            ->route('admin.tours.index')
-            ->with('success', 'Tour berhasil ditambahkan!');
     }
 
-
-    public function show($id)
+    public function edit(Tour $tour)
     {
-        $tour = Tour::findOrFail($id);
-        return view('admin.tours.show', compact('tour'));
-    }
-
-
-    public function edit($id)
-    {
-        $tour = Tour::findOrFail($id);
         return view('admin.tours.edit', compact('tour'));
     }
 
-
-    public function update(Request $request, $id)
+    public function update(Request $request, Tour $tour)
     {
-        $tour = Tour::findOrFail($id);
-
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
@@ -85,19 +80,18 @@ class TourController extends Controller
             'is_active' => 'nullable|boolean',
         ]);
 
-
+        // ✅ Slug unik
         $slug = Str::slug($validated['title']);
-        $count = Tour::where('slug', 'like', "{$slug}%")
-                    ->where('id', '!=', $tour->id)
-                    ->count();
-        if ($count > 0) {
-            $slug .= '-' . ($count + 1);
+        $baseSlug = $slug;
+        $count = 1;
+        while (Tour::where('slug', $slug)->where('id', '!=', $tour->id)->exists()) {
+            $slug = "{$baseSlug}-{$count}";
+            $count++;
         }
-
         $validated['slug'] = $slug;
-        $validated['is_active'] = $request->has('is_active');
+        $validated['is_active'] = $request->boolean('is_active', true);
 
-        // Update gambar jika ada file baru
+        // ✅ Ganti image jika diupload
         if ($request->hasFile('image')) {
             if ($tour->image && Storage::disk('public')->exists($tour->image)) {
                 Storage::disk('public')->delete($tour->image);
@@ -107,24 +101,19 @@ class TourController extends Controller
 
         $tour->update($validated);
 
-        return redirect()
-            ->route('admin.tours.index')
+        return redirect()->route('admin.tours.index')
             ->with('success', 'Tour berhasil diperbarui!');
     }
 
-
-    public function destroy($id)
+    public function destroy(Tour $tour)
     {
-        $tour = Tour::findOrFail($id);
-
         if ($tour->image && Storage::disk('public')->exists($tour->image)) {
             Storage::disk('public')->delete($tour->image);
         }
 
         $tour->delete();
 
-        return redirect()
-            ->route('admin.tours.index')
+        return redirect()->route('admin.tours.index')
             ->with('success', 'Tour berhasil dihapus!');
     }
 }

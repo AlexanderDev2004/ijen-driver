@@ -1,51 +1,24 @@
 @extends('admin.layouts.app')
 
-@section('title', 'Tambah Tour')
-
 @section('content')
-<div class="max-w-3xl mx-auto bg-white shadow-md rounded-lg p-6">
-  <h2 class="text-2xl font-semibold mb-6 text-gray-800">Tambah Tour Baru</h2>
+<div class="container mt-4">
+    <h2 class="mb-4">Tambah Tour Baru</h2>
 
-  <form action="{{ route('admin.tours.store') }}" method="POST" enctype="multipart/form-data" class="space-y-5">
-    @csrf
+    @if($errors->any())
+        <div class="alert alert-danger">
+            <strong>Terjadi kesalahan:</strong>
+            <ul>
+                @foreach($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
 
-    <div>
-      <label class="block text-sm font-medium text-gray-700">Judul Tour</label>
-      <input type="text" name="title" value="{{ old('title') }}" class="mt-1 w-full rounded-md border-gray-300 focus:ring-indigo-500 focus:border-indigo-500" required>
-      @error('title') <p class="text-sm text-red-500 mt-1">{{ $message }}</p> @enderror
-    </div>
+    <form action="{{ route('admin.tours.store') }}" method="POST" enctype="multipart/form-data">
+        @csrf
 
-    <div>
-      <label class="block text-sm font-medium text-gray-700">Lokasi</label>
-      <input type="text" name="location" value="{{ old('location') }}" class="mt-1 w-full rounded-md border-gray-300 focus:ring-indigo-500 focus:border-indigo-500">
-    </div>
-
-    <div>
-      <label class="block text-sm font-medium text-gray-700">Harga</label>
-      <input type="number" name="price" value="{{ old('price') }}" class="mt-1 w-full rounded-md border-gray-300 focus:ring-indigo-500 focus:border-indigo-500" required>
-      @error('price') <p class="text-sm text-red-500 mt-1">{{ $message }}</p> @enderror
-    </div>
-
-    <div>
-      <label class="block text-sm font-medium text-gray-700">Deskripsi</label>
-      <textarea name="description" rows="4" class="mt-1 w-full rounded-md border-gray-300 focus:ring-indigo-500 focus:border-indigo-500">{{ old('description') }}</textarea>
-    </div>
-
-    <div>
-      <label class="block text-sm font-medium text-gray-700">Gambar</label>
-      <input type="file" name="image" accept="image/*" class="mt-1 w-full text-sm text-gray-600">
-      @error('image') <p class="text-sm text-red-500 mt-1">{{ $message }}</p> @enderror
-    </div>
-
-    <div class="flex items-center gap-2">
-      <input type="checkbox" name="is_active" id="is_active" checked class="rounded text-indigo-600">
-      <label for="is_active" class="text-sm text-gray-700">Aktif</label>
-    </div>
-
-    <div class="flex gap-3">
-      <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2 rounded-md">Simpan</button>
-      <a href="{{ route('admin.tours.index') }}" class="px-5 py-2 border rounded-md text-gray-700 hover:bg-gray-100">Kembali</a>
-    </div>
-  </form>
+        @include('admin.tours._form', ['buttonText' => 'Simpan'])
+    </form>
 </div>
 @endsection

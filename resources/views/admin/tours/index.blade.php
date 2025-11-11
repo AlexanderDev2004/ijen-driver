@@ -10,6 +10,18 @@
       </a>
   </div>
 
+  @if(session('success'))
+      <div class="bg-green-100 text-green-800 px-4 py-2 rounded mb-4">
+          {{ session('success') }}
+      </div>
+  @endif
+
+  @if($errors->any())
+      <div class="bg-red-100 text-red-800 px-4 py-2 rounded mb-4">
+          {{ implode(', ', $errors->all()) }}
+      </div>
+  @endif
+
   <div class="overflow-x-auto bg-white shadow rounded-lg">
       <table class="min-w-full border border-gray-200">
           <thead class="bg-gray-100">
