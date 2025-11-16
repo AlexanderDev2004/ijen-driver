@@ -1,1 +1,1 @@
-Ijen Driver adalah website untuk memesan Tour
+Website Ijen Driver adalah website untuk melakukan pemesanan Tour melalui form yang bersedia misal nama, email, telpon, berapa orang, tanggal berapa, Bawa Anak. setelah melakukan form akan di cek kembali dan bisa di edit jika sudah mengubah form atau tidak ada maka akan menekan tombol Kirim maka akan di bawah di arahkan di wa dan akan menirimkan pesan sesuai form dan mereka akan berdiksusi lebih lanjut dan selain dapat memesan Tour para wisatawan Bisa melihat Hasil dari perjalanan sebelumnya. 
