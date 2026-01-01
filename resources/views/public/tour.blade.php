@@ -32,9 +32,9 @@
                     </div>
 
                     <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 text-right">
-                        <div class="text-sm text-slate-500">Harga mulai</div>
+                        <div class="text-sm text-slate-500">{{ __('public.price_from') }}</div>
                         <div class="text-3xl font-extrabold text-indigo-600">Rp {{ number_format($tour->price, 0, ',', '.') }}</div>
-                        <div class="text-xs text-slate-500">per orang</div>
+                        <div class="text-xs text-slate-500">{{ __('public.per_person') }}</div>
                     </div>
                 </div>
 
@@ -45,15 +45,15 @@
                 <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 pt-4 border-t border-slate-100">
                     <div class="flex items-center gap-3 text-sm text-slate-600">
                         <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 font-semibold">
-                            ✅ Tour Terverifikasi
+                            ✅ {{ __('public.verified_tour') }}
                         </span>
                         <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-50 text-indigo-700 font-semibold">
-                            🚐 Transport inklusif
+                            🚐 {{ __('public.transport_included') }}
                         </span>
                     </div>
                     <a href="{{ route('tour.booking', $tour) }}"
                        class="inline-flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-lg font-semibold shadow transition">
-                        Booking Sekarang
+                        {{ __('public.book_now') }}
                     </a>
                 </div>
             </div>
@@ -61,40 +61,47 @@
 
         {{-- Journals --}}
         <div class="mt-10">
-            <h3 class="text-2xl font-semibold mb-4 text-slate-900">Journal Perjalanan</h3>
+            <h3 class="text-2xl font-semibold mb-4 text-slate-900">{{ __('public.travel_journal') }}</h3>
 
             @if ($tour->journals && $tour->journals->count())
                 <div class="grid md:grid-cols-2 gap-5">
                     @foreach ($tour->journals as $j)
-                        <div class="bg-white p-5 shadow rounded-xl border border-slate-100 hover:shadow-md transition">
-                            <div class="text-xs font-semibold text-slate-500 uppercase tracking-wide">{{ optional($j->journal_date)->format('d M Y') }}</div>
-                            <div class="font-semibold text-slate-900 mt-1">{{ $j->title }}</div>
-                            <p class="text-slate-600 text-sm mt-2">{{ \Str::limit($j->content, 150) }}</p>
-                        </div>
+                        <a href="{{ route('journal.show', $j->id) }}" class="block bg-white p-5 shadow rounded-xl border border-slate-100 hover:shadow-lg hover:border-indigo-200 transition group">
+                            @if($j->photo)
+                            <div class="mb-3 overflow-hidden rounded-lg">
+                                <img src="{{ $j->photo_url }}" alt="{{ $j->title }}" class="w-full h-40 object-cover group-hover:scale-105 transition duration-300">
+                            </div>
+                            @endif
+
+                            <div class="flex items-center gap-2 mb-2">
+                                <div class="text-xs font-semibold text-slate-500 uppercase tracking-wide">
+                                    {{ optional($j->journal_date)->format('d M Y') }}
+                                </div>
+                                <div class="flex gap-1">
+                                    @if($j->photo)
+                                    <span class="text-xs bg-blue-50 text-blue-600 px-2 py-0.5 rounded">📷</span>
+                                    @endif
+                                    @if($j->video)
+                                    <span class="text-xs bg-purple-50 text-purple-600 px-2 py-0.5 rounded">🎥</span>
+                                    @endif
+                                </div>
+                            </div>
+
+                            <div class="font-semibold text-slate-900 mb-2 group-hover:text-indigo-600 transition">{{ $j->title }}</div>
+                            <p class="text-slate-600 text-sm line-clamp-3">{{ \Str::limit($j->content, 150) }}</p>
+
+                            <div class="mt-3 text-indigo-600 text-sm font-medium group-hover:gap-2 flex items-center gap-1 transition-all">
+                                {{ __('public.read_more') }}
+                                <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                </svg>
+                            </div>
+                        </a>
                     @endforeach
                 </div>
             @else
-                <p class="text-slate-500 text-sm">Belum ada journal untuk tour ini.</p>
+                <p class="text-slate-500 text-sm">{{ __('public.no_journals') }}</p>
             @endif
         </div>
-    </div>
-
-    {{-- Journals --}}
-    <div class="max-w-5xl mx-auto mt-10">
-        <h3 class="text-2xl font-semibold mb-4 text-gray-800">Journal Perjalanan</h3>
-
-        @if ($tour->journals && $tour->journals->count())
-            <div class="grid md:grid-cols-2 gap-5">
-                @foreach ($tour->journals as $j)
-                    <div class="bg-white p-5 shadow rounded-lg border hover:shadow-md transition">
-                        <div class="text-sm text-gray-500">{{ optional($j->journal_date)->format('d M Y') }}</div>
-                        <div class="font-semibold text-gray-800 mt-1">{{ $j->title }}</div>
-                        <p class="text-gray-600 text-sm mt-2">{{ \Str::limit($j->content, 150) }}</p>
-                    </div>
-                @endforeach
-            </div>
-        @else
-            <p class="text-gray-500 text-sm">Belum ada journal untuk tour ini.</p>
-        @endif
     </div>
 @endsection

@@ -1,0 +1,25 @@
+<?php
+
+return [
+    'home' => 'Beranda',
+    'tours' => 'Tour',
+    'about' => 'Tentang',
+    'contact' => 'Kontak',
+    'book_now' => 'Booking Sekarang',
+    'read_more' => 'Baca Selengkapnya',
+    'back_to' => 'Kembali ke',
+    'price_from' => 'Harga mulai',
+    'per_person' => 'per orang',
+    'verified_tour' => 'Tour Terverifikasi',
+    'transport_included' => 'Transport inklusif',
+    'travel_journal' => 'Journal Perjalanan',
+    'no_journals' => 'Belum ada journal untuk tour ini.',
+    'see_full_tour' => 'Lihat Tour Lengkap',
+    'other_journals' => 'Journal Lainnya dari Tour Ini',
+    'has_photo' => 'Ada Foto',
+    'has_video' => 'Ada Video',
+    'photo_documentation' => 'Dokumentasi Foto',
+    'video_documentation' => 'Video Dokumentasi',
+    'browser_no_support' => 'Browser Anda tidak mendukung pemutaran video.',
+    'tour' => 'Tour',
+];

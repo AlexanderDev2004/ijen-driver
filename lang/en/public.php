@@ -1,0 +1,25 @@
+<?php
+
+return [
+    'home' => 'Home',
+    'tours' => 'Tours',
+    'about' => 'About',
+    'contact' => 'Contact',
+    'book_now' => 'Book Now',
+    'read_more' => 'Read More',
+    'back_to' => 'Back to',
+    'price_from' => 'Price from',
+    'per_person' => 'per person',
+    'verified_tour' => 'Verified Tour',
+    'transport_included' => 'Transport included',
+    'travel_journal' => 'Travel Journal',
+    'no_journals' => 'No journals for this tour yet.',
+    'see_full_tour' => 'See Full Tour',
+    'other_journals' => 'Other Journals from This Tour',
+    'has_photo' => 'Has Photo',
+    'has_video' => 'Has Video',
+    'photo_documentation' => 'Photo Documentation',
+    'video_documentation' => 'Video Documentation',
+    'browser_no_support' => 'Your browser does not support video playback.',
+    'tour' => 'Tour',
+];

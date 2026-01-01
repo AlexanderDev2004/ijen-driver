@@ -5,9 +5,13 @@ use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\TourController;
 use App\Http\Controllers\Admin\JournalController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\LanguageController;
+
+Route::get('/lang/{lang}', [LanguageController::class, 'switch'])->name('lang.switch');
 
 Route::get('/', [PublicController::class,'index'])->name('home');
 Route::get('/tour/{tour}', [PublicController::class,'showTour'])->name('tour.show');
+Route::get('/journal/{id}', [PublicController::class,'showJournal'])->name('journal.show');
 Route::get('/tour/{tour}/booking', [PublicController::class,'bookingForm'])->name('tour.booking');
 Route::post('/tour/{tour}/booking', [PublicController::class,'submitBooking'])->name('tour.booking.submit');
 Route::get('/booking/confirm/{id}', [PublicController::class,'bookingConfirm'])->name('booking.confirm');

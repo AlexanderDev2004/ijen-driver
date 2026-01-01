@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Tour;
 use App\Models\Booking;
+use App\Models\Journal;
 use App\Http\Requests\StoreBookingRequest;
 
 class PublicController extends Controller
@@ -22,6 +23,12 @@ class PublicController extends Controller
         $tour->load('journals');
 
         return view('public.tour', compact('tour'));
+    }
+
+    public function showJournal($id)
+    {
+        $journal = Journal::with('tour')->findOrFail($id);
+        return view('public.journal', compact('journal'));
     }
 
     public function bookingForm(Tour $tour)

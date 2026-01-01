@@ -24,6 +24,11 @@
           <span class="text-lg">🗺️</span>
           <span class="font-medium">Tours</span>
         </a>
+        <a href="{{ route('admin.journals.index') }}"
+           class="flex items-center gap-2 px-3 py-2 rounded-lg transition {{ request()->routeIs('admin.journals.*') ? 'bg-white/10 text-white shadow-sm' : 'text-indigo-50 hover:bg-white/5' }}">
+          <span class="text-lg">📖</span>
+          <span class="font-medium">Journals</span>
+        </a>
         <a href="{{ route('admin.users.index') }}"
            class="flex items-center gap-2 px-3 py-2 rounded-lg transition {{ request()->routeIs('admin.users.*') ? 'bg-white/10 text-white shadow-sm' : 'text-indigo-50 hover:bg-white/5' }}">
           <span class="text-lg">👥</span>
