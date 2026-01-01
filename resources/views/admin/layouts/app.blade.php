@@ -24,6 +24,11 @@
           <span class="text-lg">🗺️</span>
           <span class="font-medium">Tours</span>
         </a>
+        <a href="{{ route('admin.users.index') }}"
+           class="flex items-center gap-2 px-3 py-2 rounded-lg transition {{ request()->routeIs('admin.users.*') ? 'bg-white/10 text-white shadow-sm' : 'text-indigo-50 hover:bg-white/5' }}">
+          <span class="text-lg">👥</span>
+          <span class="font-medium">Users</span>
+        </a>
       </nav>
       <div class="px-4 pb-5 pt-2 border-t border-white/10">
         <form action="{{ route('admin.logout') }}" method="POST">

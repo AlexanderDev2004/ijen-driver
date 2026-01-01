@@ -4,6 +4,7 @@ use App\Http\Controllers\PublicController;
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\TourController;
 use App\Http\Controllers\Admin\JournalController;
+use App\Http\Controllers\Admin\UserController;
 
 Route::get('/', [PublicController::class,'index'])->name('home');
 Route::get('/tour/{tour}', [PublicController::class,'showTour'])->name('tour.show');
@@ -26,6 +27,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
         Route::resource('tours', TourController::class);
         Route::resource('journals', JournalController::class);
+        Route::resource('users', UserController::class);
 
         Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
     });
