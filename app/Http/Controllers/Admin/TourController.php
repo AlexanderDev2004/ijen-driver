@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Exception;
 use Illuminate\Support\Facades\Log;
+use App\Http\Requests\StoreTourRequest;
 
 class TourController extends Controller
 {
@@ -23,17 +24,10 @@ class TourController extends Controller
         return view('admin.tours.create');
     }
 
-    public function store(Request $request)
+    public function store(StoreTourRequest $request)
     {
         try {
-            $validated = $request->validate([
-                'title' => 'required|string|max:255',
-                'description' => 'nullable|string',
-                'price' => 'required|numeric|min:0',
-                'location' => 'nullable|string|max:255',
-                'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
-                'is_active' => 'nullable|boolean',
-            ]);
+            $validated = $request->validated();
 
             // ✅ Generate slug unik
             $slug = Str::slug($validated['title']);
@@ -56,7 +50,7 @@ class TourController extends Controller
             }
 
             // ✅ Default aktif
-            $validated['is_active'] = $request->boolean('is_active', true);
+            $validated['is_active'] = $request->boolean('is_active', false);
 
             // ✅ Simpan ke database
             Tour::create($validated);
@@ -78,17 +72,10 @@ class TourController extends Controller
         return view('admin.tours.edit', compact('tour'));
     }
 
-    public function update(Request $request, Tour $tour)
+    public function update(StoreTourRequest $request, Tour $tour)
     {
         try {
-            $validated = $request->validate([
-                'title' => 'required|string|max:255',
-                'description' => 'nullable|string',
-                'price' => 'required|numeric|min:0',
-                'location' => 'nullable|string|max:255',
-                'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
-                'is_active' => 'nullable|boolean',
-            ]);
+            $validated = $request->validated();
 
             // ✅ Slug unik
             $slug = Str::slug($validated['title']);
@@ -99,7 +86,7 @@ class TourController extends Controller
                 $count++;
             }
             $validated['slug'] = $slug;
-            $validated['is_active'] = $request->boolean('is_active', true);
+            $validated['is_active'] = $request->boolean('is_active', false);
 
             // ✅ Ganti image jika diupload
             if ($request->hasFile('image')) {

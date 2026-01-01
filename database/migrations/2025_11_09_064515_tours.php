@@ -16,7 +16,6 @@
                 $table->string('image')->nullable(); // path
                 $table->boolean('is_active')->default(true);
                 $table->string('slug')->unique()->nullable(); // untuk SEO & routing
-                $table->softDeletes(); // agar bisa restore data yang terhapus
                 $table->timestamps();
             });
         }

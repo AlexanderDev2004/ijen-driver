@@ -2,15 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Tour;
 use App\Models\Booking;
+use App\Http\Requests\StoreBookingRequest;
 
 class PublicController extends Controller
 {
     public function index()
     {
-        $tours = Tour::where('is_active', true)->latest()->paginate(9);
+        $tours = Tour::where('is_active', true)
+            ->latest('created_at')
+            ->paginate(12);
         return view('public.index', compact('tours'));
     }
 
@@ -27,19 +29,11 @@ class PublicController extends Controller
         return view('public.booking', compact('tour'));
     }
 
-    public function submitBooking(Request $r, Tour $tour)
+    public function submitBooking(StoreBookingRequest $request, Tour $tour)
     {
-        $data = $r->validate([
-            'name' => 'required|string|max:191',
-            'phone' => 'nullable|string|max:30',
-            'date' => 'required|date|after_or_equal:today',
-            'people' => 'required|integer|min:1',
-            'has_children' => 'sometimes|in:on',
-            'children_count' => 'nullable|integer|min:0',
-            'notes' => 'nullable|string|max:1000',
-        ]);
-
-        $data['has_children'] = isset($data['has_children']) && $data['has_children'] === 'on';
+        $data = $request->validated();
+        // Convert has_children to boolean
+        $data['has_children'] = $data['has_children'] === 'on';
         if (!$data['has_children']) $data['children_count'] = null;
 
         $booking = Booking::create(array_merge($data, [
@@ -53,7 +47,7 @@ class PublicController extends Controller
 
     public function bookingConfirm($id)
     {
-        $booking = Booking::with('tour')->findOrFail($id);
+        $booking = Booking::with('tour.journals')->findOrFail($id);
         return view('public.confirm', compact('booking'));
     }
 
