@@ -89,7 +89,7 @@
                     </span>
                     @endif
                 </div>
-                <a href="{{ route('tour.show', $journal->tour) }}" 
+                <a href="{{ route('tour.show', $journal->tour) }}"
                    class="inline-flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2.5 rounded-lg font-semibold transition">
                     {{ __('public.see_full_tour') }}
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -112,7 +112,7 @@
                     <img src="{{ $otherJournal->photo_url }}" alt="{{ $otherJournal->title }}" class="w-full h-32 object-cover group-hover:scale-105 transition duration-300">
                 </div>
                 @endif
-                
+
                 <div class="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-2">
                     {{ optional($otherJournal->journal_date)->format('d M Y') }}
                 </div>

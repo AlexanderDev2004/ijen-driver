@@ -19,10 +19,10 @@ class SetLocale
     public function handle(Request $request, Closure $next): Response
     {
         $locale = Session::get('locale', config('app.locale'));
-        
+
         App::setLocale($locale);
         Carbon::setLocale($locale);
-        
+
         return $next($request);
     }
 }
