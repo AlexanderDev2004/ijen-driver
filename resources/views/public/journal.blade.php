@@ -3,7 +3,7 @@
 @section('title', $journal->title)
 
 @section('content')
-<div class="max-w-4xl mx-auto">
+<div class="max-w-4xl mx-auto px-4 sm:px-6">
     {{-- Breadcrumb --}}
     <div class="mb-6">
         <a href="{{ route('tour.show', $journal->tour) }}" class="text-indigo-600 hover:text-indigo-700 font-medium inline-flex items-center gap-2">
@@ -38,7 +38,7 @@
         {{-- Photo --}}
         @if($journal->photo)
         <div class="relative">
-            <img src="{{ $journal->photo_url }}" alt="{{ $journal->title }}" class="w-full h-96 object-cover">
+            <img src="{{ $journal->photo_url }}" alt="{{ $journal->title }}" class="w-full h-64 md:h-96 object-cover">
             <div class="absolute bottom-4 right-4 bg-white/90 backdrop-blur px-3 py-1.5 rounded-lg text-sm font-medium text-slate-700 flex items-center gap-2">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path>

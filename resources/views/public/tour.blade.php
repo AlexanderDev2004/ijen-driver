@@ -3,10 +3,10 @@
 @section('title', $tour->title) {{-- Diubah dari name ke title --}}
 
 @section('content')
-    <div class="max-w-6xl mx-auto">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6">
         <div class="bg-white rounded-2xl shadow-xl overflow-hidden border border-slate-100">
             @if ($tour->image)
-                <div class="relative h-96">
+                <div class="relative h-64 md:h-96">
                     <img src="{{ asset('storage/' . $tour->image) }}" alt="{{ $tour->title }}" class="w-full h-full object-cover">
                     <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
                     <div class="absolute bottom-4 left-4 bg-white/90 backdrop-blur px-4 py-2 rounded-xl shadow">

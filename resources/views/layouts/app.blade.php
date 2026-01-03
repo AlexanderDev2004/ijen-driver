@@ -32,12 +32,29 @@
         </a>
       </div>
 
-      <nav class="flex items-center gap-4">
+      <div class="flex items-center gap-3 md:hidden">
+        {{-- Mobile language switcher --}}
+        <div class="relative group">
+          <button class="flex items-center gap-1 text-sm px-3 py-1.5 rounded border-2 {{ app()->getLocale() == 'id' ? 'border-indigo-600 text-indigo-600' : 'border-slate-200' }} hover:border-indigo-600 transition font-medium">
+            <span class="text-xs">🌐</span>
+            <span class="uppercase font-bold">{{ app()->getLocale() }}</span>
+          </button>
+          <div class="absolute right-0 mt-1 bg-white rounded-lg shadow-xl border border-slate-200 py-1 hidden group-hover:block z-50 min-w-[140px]">
+            <a href="{{ route('lang.switch', 'id') }}" class="block px-4 py-2 text-sm hover:bg-indigo-50 transition {{ app()->getLocale() == 'id' ? 'bg-indigo-50 text-indigo-700 font-bold' : 'text-slate-700' }}">🇮🇩 Indonesia</a>
+            <a href="{{ route('lang.switch', 'en') }}" class="block px-4 py-2 text-sm hover:bg-indigo-50 transition {{ app()->getLocale() == 'en' ? 'bg-indigo-50 text-indigo-700 font-bold' : 'text-slate-700' }}">🇬🇧 English</a>
+          </div>
+        </div>
+        <button id="mobile-menu-toggle" class="md:hidden inline-flex items-center justify-center w-10 h-10 rounded-lg border border-slate-200 hover:border-indigo-500 hover:text-indigo-600 transition" aria-label="Toggle navigation">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
+        </button>
+      </div>
+
+      <nav class="hidden md:flex items-center gap-4">
         <a href="{{ route('home') }}" class="text-sm hover:text-indigo-600">{{ __('public.home') }}</a>
         <a href="{{ url('/#tours') }}" class="text-sm hover:text-indigo-600">{{ __('public.tours') }}</a>
         <a href="{{ url('/#journals') }}" class="text-sm hover:text-indigo-600">Journals</a>
 
-        {{-- Language Switcher --}}
+        {{-- Language Switcher desktop --}}
         <div class="relative group">
           <button class="flex items-center gap-1 text-sm hover:text-indigo-600 px-3 py-1.5 rounded border-2 {{ app()->getLocale() == 'id' ? 'border-indigo-600 text-indigo-600' : 'border-slate-200' }} hover:border-indigo-600 transition font-medium">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -47,26 +64,43 @@
             <span class="text-xs">{{ app()->getLocale() == 'id' ? '🇮🇩' : '🇬🇧' }}</span>
           </button>
           <div class="absolute right-0 mt-1 bg-white rounded-lg shadow-xl border border-slate-200 py-1 hidden group-hover:block z-50 min-w-[140px]">
-            <a href="{{ route('lang.switch', 'id') }}" class="block px-4 py-2 text-sm hover:bg-indigo-50 transition {{ app()->getLocale() == 'id' ? 'bg-indigo-50 text-indigo-700 font-bold' : 'text-slate-700' }}">
-              🇮🇩 Indonesia
-            </a>
-            <a href="{{ route('lang.switch', 'en') }}" class="block px-4 py-2 text-sm hover:bg-indigo-50 transition {{ app()->getLocale() == 'en' ? 'bg-indigo-50 text-indigo-700 font-bold' : 'text-slate-700' }}">
-              🇬🇧 English
-            </a>
+            <a href="{{ route('lang.switch', 'id') }}" class="block px-4 py-2 text-sm hover:bg-indigo-50 transition {{ app()->getLocale() == 'id' ? 'bg-indigo-50 text-indigo-700 font-bold' : 'text-slate-700' }}">🇮🇩 Indonesia</a>
+            <a href="{{ route('lang.switch', 'en') }}" class="block px-4 py-2 text-sm hover:bg-indigo-50 transition {{ app()->getLocale() == 'en' ? 'bg-indigo-50 text-indigo-700 font-bold' : 'text-slate-700' }}">🇬🇧 English</a>
           </div>
         </div>
 
         @if(session()->has('admin_id'))
-          <a href="{{ route('admin.dashboard') }}" class="ml-4 text-sm px-3 py-1 rounded bg-indigo-600 text-white">Admin</a>
+          <a href="{{ route('admin.dashboard') }}" class="ml-2 text-sm px-3 py-1 rounded bg-indigo-600 text-white">Admin</a>
 
           <form action="{{ route('admin.logout') }}" method="POST" class="inline-block ml-2">
             @csrf
             <button type="submit" class="text-sm px-3 py-1 rounded border hover:bg-gray-100">Logout</button>
           </form>
         @else
-          <a href="{{ route('admin.login') }}" class="ml-4 text-sm px-3 py-1 rounded border hover:bg-gray-100">Admin Login</a>
+          <a href="{{ route('admin.login') }}" class="ml-2 text-sm px-3 py-1 rounded border hover:bg-gray-100">Admin Login</a>
         @endif
       </nav>
+    </div>
+
+    {{-- Mobile menu --}}
+    <div id="mobile-menu" class="md:hidden hidden px-4 pb-3 space-y-2">
+      <a href="{{ route('home') }}" class="block text-sm py-2 border-b border-slate-100 hover:text-indigo-600">{{ __('public.home') }}</a>
+      <a href="{{ url('/#tours') }}" class="block text-sm py-2 border-b border-slate-100 hover:text-indigo-600">{{ __('public.tours') }}</a>
+      <a href="{{ url('/#journals') }}" class="block text-sm py-2 border-b border-slate-100 hover:text-indigo-600">Journals</a>
+      <div class="flex items-center gap-2 pt-2">
+        <a href="{{ route('lang.switch', 'id') }}" class="flex-1 text-sm px-3 py-2 rounded border {{ app()->getLocale() == 'id' ? 'border-indigo-500 text-indigo-600 font-semibold' : 'border-slate-200' }} text-center">🇮🇩 ID</a>
+        <a href="{{ route('lang.switch', 'en') }}" class="flex-1 text-sm px-3 py-2 rounded border {{ app()->getLocale() == 'en' ? 'border-indigo-500 text-indigo-600 font-semibold' : 'border-slate-200' }} text-center">🇬🇧 EN</a>
+      </div>
+      @if(session()->has('admin_id'))
+        <a href="{{ route('admin.dashboard') }}" class="block text-sm px-3 py-2 rounded bg-indigo-600 text-white text-center">Admin</a>
+        <form action="{{ route('admin.logout') }}" method="POST" class="mt-2">
+          @csrf
+          <button type="submit" class="w-full text-sm px-3 py-2 rounded border hover:bg-gray-100 text-center">Logout</button>
+        </form>
+      @else
+        <a href="{{ route('admin.login') }}" class="block text-sm px-3 py-2 rounded border hover:bg-gray-100 text-center">Admin Login</a>
+      @endif
+    </div>
     </div>
   </header>
 
@@ -125,6 +159,17 @@
   @else
     @vite(['resources/js/app.js'])
   @endif
+
+  {{-- Mobile menu toggle --}}
+  <script>
+    const mobileToggle = document.getElementById('mobile-menu-toggle');
+    const mobileMenu = document.getElementById('mobile-menu');
+    if (mobileToggle && mobileMenu) {
+      mobileToggle.addEventListener('click', () => {
+        mobileMenu.classList.toggle('hidden');
+      });
+    }
+  </script>
 
   @stack('scripts')
 </body>
