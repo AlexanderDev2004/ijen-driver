@@ -1,6 +1,32 @@
 @extends('layouts.app')
 
 @section('title', 'Ijen Driver - Jelajahi Alam Bersama Kami')
+@section('meta_description', 'Paket tour Kawah Ijen, Banyuwangi, dan sekitarnya dengan driver lokal berpengalaman. Booking mudah, aman, dan terpercaya.')
+@section('meta_keywords', 'tour ijen, kawah ijen, tour banyuwangi, driver banyuwangi, open trip ijen')
+
+@push('structured_data')
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "TouristTrip",
+  "name": "Ijen Driver Tours",
+  "description": "Paket tour Kawah Ijen, Banyuwangi, dan sekitarnya dengan driver lokal berpengalaman.",
+  "image": "{{ isset($tours) && $tours->first()? asset('storage/'.$tours->first()->image) : url('/images/og-default.jpg') }}",
+  "provider": {
+    "@type": "Organization",
+    "name": "Ijen Driver",
+    "url": "{{ url('/') }}"
+  },
+  "areaServed": "Banyuwangi, Indonesia",
+  "offers": {
+    "@type": "AggregateOffer",
+    "priceCurrency": "IDR",
+    "lowPrice": "{{ isset($tours) && $tours->min('price') ? number_format($tours->min('price'), 0, '', '') : '0' }}",
+    "offerCount": "{{ isset($tours) ? $tours->count() : 0 }}"
+  }
+}
+</script>
+@endpush
 
 @section('content')
 <div class="text-center py-16 bg-gradient-to-r from-indigo-600 to-teal-500 text-white">

@@ -5,7 +5,40 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="csrf-token" content="{{ csrf_token() }}">
 
+  {{-- Primary meta --}}
   <title>@yield('title', config('app.name', 'Ijen Driver'))</title>
+  <meta name="description" content="@yield('meta_description', 'Ijen Driver - Tour, travel, dan sewa driver Banyuwangi, Kawah Ijen, dan sekitarnya.')">
+  @hasSection('meta_keywords')
+    <meta name="keywords" content="@yield('meta_keywords')">
+  @endif
+  <meta name="robots" content="@yield('meta_robots', 'index,follow')">
+  <link rel="canonical" href="{{ url()->current() }}">
+
+  {{-- Hreflang (best effort using fallback locales) --}}
+  @php($availableLocales = config('app.available_locales', [config('app.fallback_locale'), 'en']))
+  @foreach(array_unique($availableLocales) as $locale)
+    <link rel="alternate" hreflang="{{ $locale }}" href="{{ url()->current() }}">
+  @endforeach
+  <link rel="alternate" hreflang="x-default" href="{{ url()->current() }}">
+
+  {{-- Open Graph / Twitter --}}
+  <meta property="og:title" content="@yield('title', config('app.name', 'Ijen Driver'))">
+  <meta property="og:description" content="@yield('meta_description', 'Ijen Driver - Tour, travel, dan sewa driver Banyuwangi, Kawah Ijen, dan sekitarnya.')">
+  <meta property="og:url" content="{{ url()->current() }}">
+  <meta property="og:type" content="@yield('meta_og_type', 'website')">
+  <meta property="og:locale" content="{{ str_replace('_','-', app()->getLocale()) }}">
+  @php($metaImage = trim($__env->yieldContent('meta_image')))
+  @if($metaImage !== '')
+    <meta property="og:image" content="{{ $metaImage }}">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="{{ $metaImage }}">
+  @else
+    <meta property="og:image" content="{{ url('/images/og-default.jpg') }}">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="{{ url('/images/og-default.jpg') }}">
+  @endif
+  <meta name="twitter:title" content="@yield('title', config('app.name', 'Ijen Driver'))">
+  <meta name="twitter:description" content="@yield('meta_description', 'Ijen Driver - Tour, travel, dan sewa driver Banyuwangi, Kawah Ijen, dan sekitarnya.')">
 
   {{-- Vite compiled CSS/JS (Laravel 10 default) --}}
   @if(file_exists(public_path('build')))
@@ -16,6 +49,7 @@
   @endif
 
   @stack('styles')
+  @stack('head')
 </head>
 <body class="bg-gray-50 text-gray-800 antialiased min-h-screen flex flex-col">
 
@@ -170,6 +204,8 @@
       });
     }
   </script>
+      @stack('head')
+      @stack('structured_data')
 
   @stack('scripts')
 </body>
