@@ -14,7 +14,31 @@ class PublicController extends Controller
         $tours = Tour::where('is_active', true)
             ->latest('created_at')
             ->paginate(12);
-        return view('public.index', compact('tours'));
+        $journals = Journal::with('tour')
+            ->latest('journal_date')
+            ->latest('created_at')
+            ->take(6)
+            ->get();
+        return view('public.index', compact('tours', 'journals'));
+    }
+
+    public function toursPage()
+    {
+        $tours = Tour::where('is_active', true)
+            ->latest('created_at')
+            ->paginate(12);
+
+        return view('public.tours', compact('tours'));
+    }
+
+    public function journalsPage()
+    {
+        $journals = Journal::with('tour')
+            ->latest('journal_date')
+            ->latest('created_at')
+            ->paginate(9);
+
+        return view('public.journals', compact('journals'));
     }
 
     public function showTour(Tour $tour)

@@ -32,8 +32,58 @@
 <div class="text-center py-16 bg-gradient-to-r from-indigo-600 to-teal-500 text-white">
   <h1 class="text-5xl font-extrabold mb-3">Petualangan Dimulai di Sini 🌋</h1>
   <p class="text-lg mb-6">Temukan pengalaman mendaki dan berwisata terbaik bersama Ijen Driver</p>
-  <a href="#tours" class="bg-white text-indigo-700 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition">Lihat Paket Tour</a>
+  <div class="flex flex-col sm:flex-row items-center justify-center gap-3">
+    <a href="#tours" class="bg-white text-indigo-700 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition">Lihat Paket Tour</a>
+    <a href="#why-us" class="px-6 py-3 rounded-lg font-semibold border border-white/50 hover:bg-white/10 transition">Kenapa Ijen Driver?</a>
+  </div>
 </div>
+
+<section class="container mx-auto px-6 py-10">
+  <div class="grid gap-6 lg:grid-cols-3">
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
+      <div class="text-2xl mb-2">⭐</div>
+      <h3 class="text-lg font-semibold text-slate-900">Sambutan Hangat</h3>
+      <p class="text-sm text-slate-600 mt-2">Selamat datang di Ijen Driver! Kami siap menemani perjalananmu dengan pelayanan ramah, aman, dan profesional.</p>
+    </div>
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
+      <div class="text-2xl mb-2">🧭</div>
+      <h3 class="text-lg font-semibold text-slate-900">Rute Terbaik</h3>
+      <p class="text-sm text-slate-600 mt-2">Pilih paket yang sesuai kebutuhan, mulai dari sunrise Ijen, city tour Banyuwangi, sampai trip custom.</p>
+    </div>
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
+      <div class="text-2xl mb-2">💬</div>
+      <h3 class="text-lg font-semibold text-slate-900">Respons Cepat</h3>
+      <p class="text-sm text-slate-600 mt-2">Tim kami siap menjawab pertanyaan dan membantu booking dengan proses yang jelas dan cepat.</p>
+    </div>
+  </div>
+</section>
+
+<section id="why-us" class="bg-white border-y">
+  <div class="container mx-auto px-6 py-12">
+    <div class="text-center max-w-2xl mx-auto">
+      <h2 class="text-3xl font-bold text-slate-900">Kenapa pilih Ijen Driver?</h2>
+      <p class="text-slate-600 mt-3">Kami fokus pada kenyamanan dan pengalaman terbaik agar perjalananmu lebih berkesan.</p>
+    </div>
+    <div class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+      <div class="rounded-xl bg-slate-50 p-5">
+        <div class="text-lg font-semibold text-slate-900">Driver Lokal</div>
+        <div class="text-sm text-slate-600 mt-1">Paham rute dan spot terbaik.</div>
+      </div>
+      <div class="rounded-xl bg-slate-50 p-5">
+        <div class="text-lg font-semibold text-slate-900">Harga Transparan</div>
+        <div class="text-sm text-slate-600 mt-1">Tanpa biaya tersembunyi.</div>
+      </div>
+      <div class="rounded-xl bg-slate-50 p-5">
+        <div class="text-lg font-semibold text-slate-900">Jadwal Fleksibel</div>
+        <div class="text-sm text-slate-600 mt-1">Bisa menyesuaikan itinerary.</div>
+      </div>
+      <div class="rounded-xl bg-slate-50 p-5">
+        <div class="text-lg font-semibold text-slate-900">Dukungan 24/7</div>
+        <div class="text-sm text-slate-600 mt-1">Siap membantu kapan saja.</div>
+      </div>
+    </div>
+  </div>
+</section>
 
 <div id="tours" class="container mx-auto px-6 py-14">
   <h2 class="text-3xl font-bold text-center text-gray-800 mb-10">Paket Tour Populer</h2>
@@ -64,4 +114,14 @@
     <p class="text-center text-gray-600">Belum ada paket tour tersedia.</p>
   @endif
 </div>
+
+<section class="container mx-auto px-6 pb-16">
+  <div class="bg-gradient-to-r from-indigo-600 to-teal-500 rounded-2xl p-8 text-white flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+    <div>
+      <h3 class="text-2xl font-bold">Siap mulai perjalanan?</h3>
+      <p class="text-white/90 mt-2">Hubungi kami untuk rekomendasi paket terbaik sesuai kebutuhanmu.</p>
+    </div>
+    <a href="{{ url('/#tours') }}" class="bg-white text-indigo-700 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition">Lihat Paket</a>
+  </div>
+</section>
 @endsection

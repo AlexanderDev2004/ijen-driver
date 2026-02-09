@@ -10,6 +10,8 @@ use App\Http\Controllers\LanguageController;
 Route::get('/lang/{lang}', [LanguageController::class, 'switch'])->name('lang.switch');
 
 Route::get('/', [PublicController::class,'index'])->name('home');
+Route::get('/tours', [PublicController::class,'toursPage'])->name('public.tours');
+Route::get('/journals', [PublicController::class,'journalsPage'])->name('public.journals');
 Route::get('/tour/{tour}', [PublicController::class,'showTour'])->name('tour.show');
 Route::get('/journal/{id}', [PublicController::class,'showJournal'])->name('journal.show');
 Route::get('/tour/{tour}/booking', [PublicController::class,'bookingForm'])->name('tour.booking');

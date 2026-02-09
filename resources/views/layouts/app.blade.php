@@ -73,7 +73,7 @@
             <span class="text-xs">🌐</span>
             <span class="uppercase font-bold">{{ app()->getLocale() }}</span>
           </button>
-          <div class="absolute right-0 mt-1 bg-white rounded-lg shadow-xl border border-slate-200 py-1 hidden group-hover:block z-50 min-w-[140px]">
+          <div class="absolute right-0 mt-1 bg-white rounded-lg shadow-xl border border-slate-200 py-1 z-50 min-w-[140px] invisible opacity-0 group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100 transition">
             <a href="{{ route('lang.switch', 'id') }}" class="block px-4 py-2 text-sm hover:bg-indigo-50 transition {{ app()->getLocale() == 'id' ? 'bg-indigo-50 text-indigo-700 font-bold' : 'text-slate-700' }}">🇮🇩 Indonesia</a>
             <a href="{{ route('lang.switch', 'en') }}" class="block px-4 py-2 text-sm hover:bg-indigo-50 transition {{ app()->getLocale() == 'en' ? 'bg-indigo-50 text-indigo-700 font-bold' : 'text-slate-700' }}">🇬🇧 English</a>
           </div>
@@ -85,8 +85,8 @@
 
       <nav class="hidden md:flex items-center gap-4">
         <a href="{{ route('home') }}" class="text-sm hover:text-indigo-600">{{ __('public.home') }}</a>
-        <a href="{{ url('/#tours') }}" class="text-sm hover:text-indigo-600">{{ __('public.tours') }}</a>
-        <a href="{{ url('/#journals') }}" class="text-sm hover:text-indigo-600">Journals</a>
+        <a href="{{ route('public.tours') }}" class="text-sm hover:text-indigo-600">{{ __('public.tours') }}</a>
+        <a href="{{ route('public.journals') }}" class="text-sm hover:text-indigo-600">{{ __('public.travel_journal') }}</a>
 
         {{-- Language Switcher desktop --}}
         <div class="relative group">
@@ -97,7 +97,7 @@
             <span class="uppercase font-bold">{{ app()->getLocale() }}</span>
             <span class="text-xs">{{ app()->getLocale() == 'id' ? '🇮🇩' : '🇬🇧' }}</span>
           </button>
-          <div class="absolute right-0 mt-1 bg-white rounded-lg shadow-xl border border-slate-200 py-1 hidden group-hover:block z-50 min-w-[140px]">
+          <div class="absolute right-0 mt-1 bg-white rounded-lg shadow-xl border border-slate-200 py-1 z-50 min-w-[140px] invisible opacity-0 group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100 transition">
             <a href="{{ route('lang.switch', 'id') }}" class="block px-4 py-2 text-sm hover:bg-indigo-50 transition {{ app()->getLocale() == 'id' ? 'bg-indigo-50 text-indigo-700 font-bold' : 'text-slate-700' }}">🇮🇩 Indonesia</a>
             <a href="{{ route('lang.switch', 'en') }}" class="block px-4 py-2 text-sm hover:bg-indigo-50 transition {{ app()->getLocale() == 'en' ? 'bg-indigo-50 text-indigo-700 font-bold' : 'text-slate-700' }}">🇬🇧 English</a>
           </div>
@@ -119,8 +119,8 @@
     {{-- Mobile menu --}}
     <div id="mobile-menu" class="md:hidden hidden px-4 pb-3 space-y-2">
       <a href="{{ route('home') }}" class="block text-sm py-2 border-b border-slate-100 hover:text-indigo-600">{{ __('public.home') }}</a>
-      <a href="{{ url('/#tours') }}" class="block text-sm py-2 border-b border-slate-100 hover:text-indigo-600">{{ __('public.tours') }}</a>
-      <a href="{{ url('/#journals') }}" class="block text-sm py-2 border-b border-slate-100 hover:text-indigo-600">Journals</a>
+      <a href="{{ route('public.tours') }}" class="block text-sm py-2 border-b border-slate-100 hover:text-indigo-600">{{ __('public.tours') }}</a>
+      <a href="{{ route('public.journals') }}" class="block text-sm py-2 border-b border-slate-100 hover:text-indigo-600">{{ __('public.travel_journal') }}</a>
       <div class="flex items-center gap-2 pt-2">
         <a href="{{ route('lang.switch', 'id') }}" class="flex-1 text-sm px-3 py-2 rounded border {{ app()->getLocale() == 'id' ? 'border-indigo-500 text-indigo-600 font-semibold' : 'border-slate-200' }} text-center">🇮🇩 ID</a>
         <a href="{{ route('lang.switch', 'en') }}" class="flex-1 text-sm px-3 py-2 rounded border {{ app()->getLocale() == 'en' ? 'border-indigo-500 text-indigo-600 font-semibold' : 'border-slate-200' }} text-center">🇬🇧 EN</a>
