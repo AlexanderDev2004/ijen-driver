@@ -95,7 +95,11 @@
                     <p class="text-gray-600 text-sm mb-4">{{ \Str::limit($tour->description, 100) }}</p>
 
                     <div class="flex justify-between items-center">
-                        <span class="text-lg font-bold text-indigo-600">Rp {{ number_format($tour->price, 0, ',', '.') }}</span>
+                        @if($tour->show_price)
+                            <span class="text-lg font-bold text-indigo-600">Rp {{ number_format($tour->price, 0, ',', '.') }}</span>
+                        @else
+                            <span class="text-sm font-semibold text-slate-500">{{ __('public.price_hidden') }}</span>
+                        @endif
                         <a href="{{ route('tour.show', $tour) }}"
                            class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition">
                             Detail

@@ -51,7 +51,11 @@ class StoreTourRequest extends FormRequest
                 'dimensions:min_width=100,min_height=100,max_width=4000,max_height=4000',
             ],
             'is_active' => [
-                'nullable',
+                'sometimes',
+                'boolean',
+            ],
+            'show_price' => [
+                'sometimes',
                 'boolean',
             ],
         ];
@@ -88,11 +92,19 @@ class StoreTourRequest extends FormRequest
      */
     protected function prepareForValidation(): void
     {
-        // Trim title and location
-        $this->merge([
+        $payload = [
             'title' => trim($this->title ?? ''),
             'location' => trim($this->location ?? ''),
-            'is_active' => $this->boolean('is_active', false),
-        ]);
+        ];
+
+        if ($this->has('is_active')) {
+            $payload['is_active'] = $this->boolean('is_active');
+        }
+
+        if ($this->has('show_price')) {
+            $payload['show_price'] = $this->boolean('show_price');
+        }
+
+        $this->merge($payload);
     }
 }

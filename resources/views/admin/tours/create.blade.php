@@ -1,7 +1,7 @@
 @extends('admin.layouts.app')
 
 @section('content')
-<div class="max-w-5xl mx-auto">
+<div class="max-w-6xl mx-auto">
     <div class="mb-6">
         <p class="text-xs font-semibold uppercase tracking-wide text-slate-400">Tambah</p>
         <h2 class="text-2xl font-bold text-slate-900">Tambah Tour Baru</h2>
@@ -19,7 +19,7 @@
         </div>
     @endif
 
-    <div class="bg-white shadow-xl rounded-2xl border border-slate-100 p-6">
+    <div class="bg-white shadow-xl rounded-2xl border border-slate-100 p-6 lg:p-8">
         <form action="{{ route('admin.tours.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
             @csrf
             @include('admin.tours._form', ['buttonText' => 'Simpan'])

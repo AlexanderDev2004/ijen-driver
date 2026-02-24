@@ -10,6 +10,7 @@ use Illuminate\Support\Str;
 use Exception;
 use Illuminate\Support\Facades\Log;
 use App\Http\Requests\StoreTourRequest;
+use App\Exceptions\ImageUploadException;
 
 class TourController extends Controller
 {
@@ -49,8 +50,13 @@ class TourController extends Controller
                 $validated['image'] = null;
             }
 
-            // ✅ Default aktif
-            $validated['is_active'] = $request->boolean('is_active', false);
+            // ✅ Default aktif saat create jika field tidak dikirim
+            $validated['is_active'] = $request->has('is_active')
+                ? $request->boolean('is_active')
+                : true;
+            $validated['show_price'] = $request->has('show_price')
+                ? $request->boolean('show_price')
+                : true;
 
             // ✅ Simpan ke database
             Tour::create($validated);
@@ -86,7 +92,13 @@ class TourController extends Controller
                 $count++;
             }
             $validated['slug'] = $slug;
-            $validated['is_active'] = $request->boolean('is_active', false);
+            // ✅ Optional saat edit: jika field tidak dikirim, pertahankan nilai lama
+            $validated['is_active'] = $request->has('is_active')
+                ? $request->boolean('is_active')
+                : $tour->is_active;
+            $validated['show_price'] = $request->has('show_price')
+                ? $request->boolean('show_price')
+                : $tour->show_price;
 
             // ✅ Ganti image jika diupload
             if ($request->hasFile('image')) {
@@ -158,50 +170,50 @@ class TourController extends Controller
             $allowedMimes = ['image/jpeg', 'image/jpg', 'image/png'];
             $actualMime = $image->getMimeType();
             if (!in_array($actualMime, $allowedMimes)) {
-                throw new Exception('Jenis file tidak diizinkan. Hanya JPG, JPEG, PNG yang diperbolehkan. Detected: ' . $actualMime);
+                throw new ImageUploadException('Jenis file tidak diizinkan. Hanya JPG, JPEG, PNG yang diperbolehkan. Detected: ' . $actualMime);
             }
 
             // 2. Validasi ekstensi file
             $allowedExtensions = ['jpg', 'jpeg', 'png'];
             $extension = strtolower($image->getClientOriginalExtension());
             if (!in_array($extension, $allowedExtensions)) {
-                throw new Exception('Ekstensi file tidak valid. Hanya jpg, jpeg, png yang diizinkan.');
+                throw new ImageUploadException('Ekstensi file tidak valid. Hanya jpg, jpeg, png yang diizinkan.');
             }
 
             // 3. Validasi ukuran file (max 2MB)
             $maxSize = 2 * 1024 * 1024; // 2MB in bytes
             $fileSize = $image->getSize();
             if ($fileSize > $maxSize) {
-                throw new Exception('Ukuran file terlalu besar. Maksimal 2MB. Ukuran file: ' . round($fileSize / 1024 / 1024, 2) . 'MB');
+                throw new ImageUploadException('Ukuran file terlalu besar. Maksimal 2MB. Ukuran file: ' . round($fileSize / 1024 / 1024, 2) . 'MB');
             }
 
             // 4. Validasi ukuran file minimal (cegah file kosong/rusak)
             if ($fileSize < 100) {
-                throw new Exception('File gambar tidak valid atau rusak. Ukuran file terlalu kecil.');
+                throw new ImageUploadException('File gambar tidak valid atau rusak. Ukuran file terlalu kecil.');
             }
 
             // 5. Validasi dimensi gambar
             $imageInfo = @getimagesize($image->getPathname());
             if (!$imageInfo) {
-                throw new Exception('File bukan gambar yang valid.');
+                throw new ImageUploadException('File bukan gambar yang valid.');
             }
 
             list($width, $height) = $imageInfo;
 
             // Validasi dimensi maksimal
             if ($width > 5000 || $height > 5000) {
-                throw new Exception('Dimensi gambar terlalu besar. Maksimal 5000x5000 pixel. Detected: ' . $width . 'x' . $height);
+                throw new ImageUploadException('Dimensi gambar terlalu besar. Maksimal 5000x5000 pixel. Detected: ' . $width . 'x' . $height);
             }
 
             // Validasi dimensi minimal
             if ($width < 100 || $height < 100) {
-                throw new Exception('Dimensi gambar terlalu kecil. Minimal 100x100 pixel. Detected: ' . $width . 'x' . $height);
+                throw new ImageUploadException('Dimensi gambar terlalu kecil. Minimal 100x100 pixel. Detected: ' . $width . 'x' . $height);
             }
 
             // 6. Cek nama file untuk mencegah path traversal
             $originalName = $image->getClientOriginalName();
             if (preg_match('/\.\.|\/|\\\\/', $originalName)) {
-                throw new Exception('Nama file mengandung karakter yang tidak diizinkan.');
+                throw new ImageUploadException('Nama file mengandung karakter yang tidak diizinkan.');
             }
 
             // 7. Scan untuk konten berbahaya
@@ -215,7 +227,7 @@ class TourController extends Controller
 
             // 10. Verifikasi file berhasil diupload
             if (!Storage::disk('public')->exists($imagePath)) {
-                throw new Exception('Gagal menyimpan file gambar.');
+                throw new ImageUploadException('Gagal menyimpan file gambar.');
             }
 
             Log::info('Image uploaded successfully', [
@@ -253,12 +265,12 @@ class TourController extends Controller
 
         // Deteksi PHP code dalam gambar
         if (preg_match('/<\?php|eval\(|base64_decode|gzinflate/i', $firstBytes)) {
-            throw new Exception('File gambar mengandung konten yang mencurigakan (PHP code detected).');
+            throw new ImageUploadException('File gambar mengandung konten yang mencurigakan (PHP code detected).');
         }
 
         // Deteksi script tags
         if (preg_match('/<script|javascript:/i', $firstBytes)) {
-            throw new Exception('File gambar mengandung konten yang mencurigakan (Script detected).');
+            throw new ImageUploadException('File gambar mengandung konten yang mencurigakan (Script detected).');
         }
 
         // Deteksi file signatures berbahaya
@@ -273,13 +285,13 @@ class TourController extends Controller
 
         foreach ($signatures as $signature => $type) {
             if (strpos($firstBytesHex, $signature) === 0) {
-                throw new Exception("File terdeteksi sebagai {$type}, bukan gambar.");
+                throw new ImageUploadException("File terdeteksi sebagai {$type}, bukan gambar.");
             }
         }
 
         // Deteksi file kosong atau corrupted
         if (strlen($firstBytes) < 10) {
-            throw new Exception('File gambar rusak atau tidak valid.');
+            throw new ImageUploadException('File gambar rusak atau tidak valid.');
         }
     }
 }

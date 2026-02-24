@@ -16,6 +16,7 @@ class Tour extends Model
         'title',
         'description',
         'price',
+        'show_price',
         'location',
         'image',
         'is_active',
@@ -24,6 +25,7 @@ class Tour extends Model
 
     protected $casts = [
         'is_active' => 'boolean',
+        'show_price' => 'boolean',
         'price' => 'decimal:2',
     ];
 

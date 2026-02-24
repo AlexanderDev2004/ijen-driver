@@ -65,7 +65,9 @@ class PublicController extends Controller
         $data = $request->validated();
         // Convert has_children to boolean
         $data['has_children'] = $data['has_children'] === 'on';
-        if (!$data['has_children']) $data['children_count'] = null;
+        if (!$data['has_children']) {
+            $data['children_count'] = null;
+        }
 
         $booking = Booking::create(array_merge($data, [
             'tour_id' => $tour->id,

@@ -7,6 +7,7 @@ use App\Http\Requests\StoreJournalRequest;
 use App\Models\Journal;
 use App\Models\Tour;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class JournalController extends Controller
 {
@@ -58,8 +59,8 @@ class JournalController extends Controller
             // Handle photo upload
             if ($request->hasFile('photo')) {
                 // Delete old photo if exists
-                if ($journal->photo && \Storage::disk('public')->exists($journal->photo)) {
-                    \Storage::disk('public')->delete($journal->photo);
+                if ($journal->photo && Storage::disk('public')->exists($journal->photo)) {
+                    Storage::disk('public')->delete($journal->photo);
                 }
                 $validated['photo'] = $request->file('photo')->store('journals/photos', 'public');
             }
@@ -67,8 +68,8 @@ class JournalController extends Controller
             // Handle video upload
             if ($request->hasFile('video')) {
                 // Delete old video if exists
-                if ($journal->video && \Storage::disk('public')->exists($journal->video)) {
-                    \Storage::disk('public')->delete($journal->video);
+                if ($journal->video && Storage::disk('public')->exists($journal->video)) {
+                    Storage::disk('public')->delete($journal->video);
                 }
                 $validated['video'] = $request->file('video')->store('journals/videos', 'public');
             }
@@ -84,13 +85,13 @@ class JournalController extends Controller
     {
         try {
             // Delete photo if exists
-            if ($journal->photo && \Storage::disk('public')->exists($journal->photo)) {
-                \Storage::disk('public')->delete($journal->photo);
+            if ($journal->photo && Storage::disk('public')->exists($journal->photo)) {
+                Storage::disk('public')->delete($journal->photo);
             }
 
             // Delete video if exists
-            if ($journal->video && \Storage::disk('public')->exists($journal->video)) {
-                \Storage::disk('public')->delete($journal->video);
+            if ($journal->video && Storage::disk('public')->exists($journal->video)) {
+                Storage::disk('public')->delete($journal->video);
             }
 
             $journal->delete();

@@ -31,11 +31,19 @@
                         @endif
                     </div>
 
-                    <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 text-right">
-                        <div class="text-sm text-slate-500">{{ __('public.price_from') }}</div>
-                        <div class="text-3xl font-extrabold text-indigo-600">Rp {{ number_format($tour->price, 0, ',', '.') }}</div>
-                        <div class="text-xs text-slate-500">{{ __('public.per_person') }}</div>
-                    </div>
+                    @if($tour->show_price)
+                        <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 text-right">
+                            <div class="text-sm text-slate-500">{{ __('public.price_from') }}</div>
+                            <div class="text-3xl font-extrabold text-indigo-600">Rp {{ number_format($tour->price, 0, ',', '.') }}</div>
+                            <div class="text-xs text-slate-500">{{ __('public.per_person') }}</div>
+                        </div>
+                    @else
+                        <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 text-right">
+                            <div class="text-sm text-slate-500">{{ __('public.price_from') }}</div>
+                            <div class="text-lg font-bold text-slate-700">{{ __('public.price_hidden') }}</div>
+                            <div class="text-xs text-slate-500">{{ __('public.contact_for_price') }}</div>
+                        </div>
+                    @endif
                 </div>
 
                 <div class="prose prose-slate max-w-none text-slate-700 leading-relaxed">
