@@ -1,0 +1,137 @@
+name: CI
+
+on:
+  pull_request:
+    branches: ["**"]
+  push:
+    branches: ["main", "master", "develop"]
+
+jobs:
+  test-and-build:
+    runs-on: ubuntu-latest
+    env:
+      CI_DB_HOST: 127.0.0.1
+      CI_DB_PORT: 3306
+      CI_DB_DATABASE: ${{ secrets.CI_DB_DATABASE }}
+      CI_DB_USERNAME: ${{ secrets.CI_DB_USERNAME }}
+      CI_DB_PASSWORD: ${{ secrets.CI_DB_PASSWORD }}
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_DATABASE: ${{ secrets.CI_DB_DATABASE }}
+          MYSQL_ROOT_PASSWORD: ${{ secrets.CI_DB_PASSWORD }}
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping --silent"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=12
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: mbstring, pdo_mysql, fileinfo
+          coverage: none
+
+      - name: Install Composer dependencies
+        run: composer install --no-interaction --prefer-dist --no-progress
+
+      - name: Prepare Laravel environment
+        env:
+          APP_ENV: testing
+          DB_CONNECTION: mysql
+          DB_HOST: ${{ env.CI_DB_HOST }}
+          DB_PORT: ${{ env.CI_DB_PORT }}
+          DB_DATABASE: ${{ env.CI_DB_DATABASE }}
+          DB_USERNAME: ${{ env.CI_DB_USERNAME }}
+          DB_PASSWORD: ${{ env.CI_DB_PASSWORD }}
+          SESSION_DRIVER: array
+          CACHE_STORE: array
+          QUEUE_CONNECTION: sync
+        run: |
+          cp .env.example .env
+          {
+            echo "APP_ENV=${APP_ENV}"
+            echo "DB_CONNECTION=${DB_CONNECTION}"
+            echo "DB_HOST=${DB_HOST}"
+            echo "DB_PORT=${DB_PORT}"
+            echo "DB_DATABASE=${DB_DATABASE}"
+            echo "DB_USERNAME=${DB_USERNAME}"
+            echo "DB_PASSWORD=${DB_PASSWORD}"
+            echo "SESSION_DRIVER=${SESSION_DRIVER}"
+            echo "CACHE_STORE=${CACHE_STORE}"
+            echo "QUEUE_CONNECTION=${QUEUE_CONNECTION}"
+          } >> .env
+          php artisan key:generate --ansi
+
+      - name: Validate CI database secrets
+        run: |
+          [ -n "${CI_DB_DATABASE}" ] || (echo "Missing secret: CI_DB_DATABASE"; exit 1)
+          [ -n "${CI_DB_USERNAME}" ] || (echo "Missing secret: CI_DB_USERNAME"; exit 1)
+          [ -n "${CI_DB_PASSWORD}" ] || (echo "Missing secret: CI_DB_PASSWORD"; exit 1)
+
+      - name: Wait for MySQL service
+        run: |
+          for i in {1..30}; do
+            if mysqladmin ping -h"${CI_DB_HOST}" -u"${CI_DB_USERNAME}" -p"${CI_DB_PASSWORD}" --silent; then
+              exit 0
+            fi
+            echo "Waiting for MySQL..."
+            sleep 2
+          done
+          echo "MySQL did not become ready in time" && exit 1
+
+      - name: Run database migrations (testing DB)
+        env:
+          APP_ENV: testing
+          DB_CONNECTION: mysql
+          DB_HOST: ${{ env.CI_DB_HOST }}
+          DB_PORT: ${{ env.CI_DB_PORT }}
+          DB_DATABASE: ${{ env.CI_DB_DATABASE }}
+          DB_USERNAME: ${{ env.CI_DB_USERNAME }}
+          DB_PASSWORD: ${{ env.CI_DB_PASSWORD }}
+          SESSION_DRIVER: array
+          CACHE_STORE: array
+          QUEUE_CONNECTION: sync
+        run: php artisan migrate --force --ansi
+
+      - name: Run PHPUnit
+        env:
+          APP_ENV: testing
+          DB_CONNECTION: mysql
+          DB_HOST: ${{ env.CI_DB_HOST }}
+          DB_PORT: ${{ env.CI_DB_PORT }}
+          DB_DATABASE: ${{ env.CI_DB_DATABASE }}
+          DB_USERNAME: ${{ env.CI_DB_USERNAME }}
+          DB_PASSWORD: ${{ env.CI_DB_PASSWORD }}
+          SESSION_DRIVER: array
+          CACHE_STORE: array
+          QUEUE_CONNECTION: sync
+        run: vendor/bin/phpunit --testdox --colors=never
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+
+      - name: Install Node dependencies
+        run: npm ci
+
+      - name: Build frontend assets
+        run: npm run build
+
+      - name: Upload build artifact
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-build
+          path: public/build
+          if-no-files-found: error
