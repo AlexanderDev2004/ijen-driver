@@ -12,15 +12,17 @@ jobs:
     env:
       CI_DB_HOST: 127.0.0.1
       CI_DB_PORT: 3306
-      CI_DB_DATABASE: ${{ secrets.CI_DB_DATABASE }}
-      CI_DB_USERNAME: ${{ secrets.CI_DB_USERNAME }}
-      CI_DB_PASSWORD: ${{ secrets.CI_DB_PASSWORD }}
+      CI_DB_DATABASE: ijen_driver_test
+      CI_DB_USERNAME: laravel
+      CI_DB_PASSWORD: laravel
     services:
       mysql:
         image: mysql:8.0
         env:
-          MYSQL_DATABASE: ${{ secrets.CI_DB_DATABASE }}
-          MYSQL_ROOT_PASSWORD: ${{ secrets.CI_DB_PASSWORD }}
+          MYSQL_DATABASE: ijen_driver_test
+          MYSQL_USER: laravel
+          MYSQL_PASSWORD: laravel
+          MYSQL_ROOT_PASSWORD: root
         ports:
           - 3306:3306
         options: >-
@@ -70,12 +72,6 @@ jobs:
             echo "QUEUE_CONNECTION=${QUEUE_CONNECTION}"
           } >> .env
           php artisan key:generate --ansi
-
-      - name: Validate CI database secrets
-        run: |
-          [ -n "${CI_DB_DATABASE}" ] || (echo "Missing secret: CI_DB_DATABASE"; exit 1)
-          [ -n "${CI_DB_USERNAME}" ] || (echo "Missing secret: CI_DB_USERNAME"; exit 1)
-          [ -n "${CI_DB_PASSWORD}" ] || (echo "Missing secret: CI_DB_PASSWORD"; exit 1)
 
       - name: Wait for MySQL service
         run: |
