@@ -19,6 +19,7 @@ Website Ijen Driver adalah website untuk melakukan pemesanan Tour melalui form y
 - [x]  Memperbaiki Bug Toggle Aktif Tour
 - [x]  Memperbaiki Database di Tour di bagian delete_at (Karena Tidak di butuhkan)
 - [x]  Menambahkan Toggle visibilitas harga Tour sesuai kondisi
+- [x]  Fixing UI Responsive
 
 # CI/CD (Analysis & Setup)
 

@@ -54,108 +54,101 @@
 <body class="bg-gray-50 text-gray-800 antialiased min-h-screen flex flex-col">
 
   {{-- Topbar --}}
-  <header class="bg-white shadow-sm">
+  <header class="bg-white shadow-sm sticky top-0 z-50">
     <div class="container mx-auto px-4 py-3 flex items-center justify-between">
       <div class="flex items-center gap-3">
         <a href="{{ route('home') }}" class="flex items-center gap-3">
           <div class="w-10 h-10 rounded-full bg-gradient-to-r from-indigo-600 to-teal-400 flex items-center justify-center text-white font-bold">ID</div>
-          <div>
+          <div class="hidden sm:block">
             <div class="font-semibold text-lg">Ijen Driver</div>
             <div class="text-xs text-gray-500">Tour & Booking</div>
           </div>
         </a>
       </div>
 
-      <div class="flex items-center gap-3 md:hidden">
-        {{-- Mobile language switcher --}}
-        <div class="relative group">
-          <button class="flex items-center gap-1 text-sm px-3 py-1.5 rounded border-2 {{ app()->getLocale() == 'id' ? 'border-indigo-600 text-indigo-600' : 'border-slate-200' }} hover:border-indigo-600 transition font-medium">
-            <span class="text-xs">🌐</span>
-            <span class="uppercase font-bold">{{ app()->getLocale() }}</span>
-          </button>
-          <div class="absolute right-0 mt-1 bg-white rounded-lg shadow-xl border border-slate-200 py-1 z-50 min-w-[140px] invisible opacity-0 group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100 transition">
-            <a href="{{ route('lang.switch', 'id') }}" class="block px-4 py-2 text-sm hover:bg-indigo-50 transition {{ app()->getLocale() == 'id' ? 'bg-indigo-50 text-indigo-700 font-bold' : 'text-slate-700' }}">🇮🇩 Indonesia</a>
-            <a href="{{ route('lang.switch', 'en') }}" class="block px-4 py-2 text-sm hover:bg-indigo-50 transition {{ app()->getLocale() == 'en' ? 'bg-indigo-50 text-indigo-700 font-bold' : 'text-slate-700' }}">🇬🇧 English</a>
-          </div>
-        </div>
-        <button id="mobile-menu-toggle" class="md:hidden inline-flex items-center justify-center w-10 h-10 rounded-lg border border-slate-200 hover:border-indigo-500 hover:text-indigo-600 transition" aria-label="Toggle navigation">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
+      <div class="flex items-center gap-2 md:hidden">
+        <button id="mobile-menu-toggle" class="inline-flex items-center justify-center w-11 h-11 rounded-lg border border-slate-200 hover:border-indigo-500 hover:text-indigo-600 transition touch-manipulation" aria-label="Toggle navigation">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
         </button>
       </div>
 
-      <nav class="hidden md:flex items-center gap-4">
-        <a href="{{ route('home') }}" class="text-sm hover:text-indigo-600">{{ __('public.home') }}</a>
-        <a href="{{ route('public.tours') }}" class="text-sm hover:text-indigo-600">{{ __('public.tours') }}</a>
-        <a href="{{ route('public.journals') }}" class="text-sm hover:text-indigo-600">{{ __('public.travel_journal') }}</a>
+      <nav class="hidden md:flex items-center gap-1 lg:gap-2">
+        <a href="{{ route('home') }}" class="text-sm px-3 py-2 rounded-lg hover:bg-slate-50 hover:text-indigo-600 transition">{{ __('public.home') }}</a>
+        <a href="{{ route('public.tours') }}" class="text-sm px-3 py-2 rounded-lg hover:bg-slate-50 hover:text-indigo-600 transition">{{ __('public.tours') }}</a>
+        <a href="{{ route('public.journals') }}" class="text-sm px-3 py-2 rounded-lg hover:bg-slate-50 hover:text-indigo-600 transition">{{ __('public.travel_journal') }}</a>
 
-        {{-- Language Switcher desktop --}}
-        <div class="relative group">
-          <button class="flex items-center gap-1 text-sm hover:text-indigo-600 px-3 py-1.5 rounded border-2 {{ app()->getLocale() == 'id' ? 'border-indigo-600 text-indigo-600' : 'border-slate-200' }} hover:border-indigo-600 transition font-medium">
+        <div class="relative group ml-1">
+          <button class="flex items-center gap-1 text-sm px-3 py-2 rounded-lg hover:bg-slate-50 transition font-medium">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129"></path>
             </svg>
             <span class="uppercase font-bold">{{ app()->getLocale() }}</span>
-            <span class="text-xs">{{ app()->getLocale() == 'id' ? '🇮🇩' : '🇬🇧' }}</span>
           </button>
-          <div class="absolute right-0 mt-1 bg-white rounded-lg shadow-xl border border-slate-200 py-1 z-50 min-w-[140px] invisible opacity-0 group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100 transition">
-            <a href="{{ route('lang.switch', 'id') }}" class="block px-4 py-2 text-sm hover:bg-indigo-50 transition {{ app()->getLocale() == 'id' ? 'bg-indigo-50 text-indigo-700 font-bold' : 'text-slate-700' }}">🇮🇩 Indonesia</a>
-            <a href="{{ route('lang.switch', 'en') }}" class="block px-4 py-2 text-sm hover:bg-indigo-50 transition {{ app()->getLocale() == 'en' ? 'bg-indigo-50 text-indigo-700 font-bold' : 'text-slate-700' }}">🇬🇧 English</a>
+          <div class="absolute right-0 mt-1 bg-white rounded-xl shadow-lg border border-slate-100 py-1 z-50 min-w-[140px] opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+            <a href="{{ route('lang.switch', 'id') }}" class="block px-4 py-2.5 text-sm hover:bg-indigo-50 transition {{ app()->getLocale() == 'id' ? 'bg-indigo-50 text-indigo-700 font-bold' : 'text-slate-700' }}">🇮🇩 Indonesia</a>
+            <a href="{{ route('lang.switch', 'en') }}" class="block px-4 py-2.5 text-sm hover:bg-indigo-50 transition {{ app()->getLocale() == 'en' ? 'bg-indigo-50 text-indigo-700 font-bold' : 'text-slate-700' }}">🇬🇧 English</a>
           </div>
         </div>
 
         @if(session()->has('admin_id'))
-          <a href="{{ route('admin.dashboard') }}" class="ml-2 text-sm px-3 py-1 rounded bg-indigo-600 text-white">Admin</a>
+          <a href="{{ route('admin.dashboard') }}" class="ml-2 text-sm px-4 py-2 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700 transition">Admin</a>
 
-          <form action="{{ route('admin.logout') }}" method="POST" class="inline-block ml-2">
+          <form action="{{ route('admin.logout') }}" method="POST" class="inline-block ml-1">
             @csrf
-            <button type="submit" class="text-sm px-3 py-1 rounded border hover:bg-gray-100">Logout</button>
+            <button type="submit" class="text-sm px-3 py-2 rounded-lg border hover:bg-slate-50 transition">Logout</button>
           </form>
         @else
-          <a href="{{ route('admin.login') }}" class="ml-2 text-sm px-3 py-1 rounded border hover:bg-gray-100">Admin Login</a>
+          <a href="{{ route('admin.login') }}" class="ml-2 text-sm px-3 py-2 rounded-lg border hover:bg-slate-50 transition">Admin</a>
         @endif
       </nav>
     </div>
 
     {{-- Mobile menu --}}
-    <div id="mobile-menu" class="md:hidden hidden px-4 pb-3 space-y-2">
-      <a href="{{ route('home') }}" class="block text-sm py-2 border-b border-slate-100 hover:text-indigo-600">{{ __('public.home') }}</a>
-      <a href="{{ route('public.tours') }}" class="block text-sm py-2 border-b border-slate-100 hover:text-indigo-600">{{ __('public.tours') }}</a>
-      <a href="{{ route('public.journals') }}" class="block text-sm py-2 border-b border-slate-100 hover:text-indigo-600">{{ __('public.travel_journal') }}</a>
-      <div class="flex items-center gap-2 pt-2">
-        <a href="{{ route('lang.switch', 'id') }}" class="flex-1 text-sm px-3 py-2 rounded border {{ app()->getLocale() == 'id' ? 'border-indigo-500 text-indigo-600 font-semibold' : 'border-slate-200' }} text-center">🇮🇩 ID</a>
-        <a href="{{ route('lang.switch', 'en') }}" class="flex-1 text-sm px-3 py-2 rounded border {{ app()->getLocale() == 'en' ? 'border-indigo-500 text-indigo-600 font-semibold' : 'border-slate-200' }} text-center">🇬🇧 EN</a>
+    <div id="mobile-menu" class="md:hidden hidden border-t border-slate-100">
+      <div class="px-4 py-3 space-y-1">
+        <a href="{{ route('home') }}" class="block text-base py-3 px-3 -mx-3 rounded-lg hover:bg-slate-50 hover:text-indigo-600">{{ __('public.home') }}</a>
+        <a href="{{ route('public.tours') }}" class="block text-base py-3 px-3 -mx-3 rounded-lg hover:bg-slate-50 hover:text-indigo-600">{{ __('public.tours') }}</a>
+        <a href="{{ route('public.journals') }}" class="block text-base py-3 px-3 -mx-3 rounded-lg hover:bg-slate-50 hover:text-indigo-600">{{ __('public.travel_journal') }}</a>
+      </div>
+      <div class="px-4 pb-4 flex gap-2">
+        <a href="{{ route('lang.switch', 'id') }}" class="flex-1 text-center text-sm px-4 py-2.5 rounded-lg border {{ app()->getLocale() == 'id' ? 'border-indigo-500 bg-indigo-50 text-indigo-600 font-semibold' : 'border-slate-200' }}">🇮🇩 Indonesia</a>
+        <a href="{{ route('lang.switch', 'en') }}" class="flex-1 text-center text-sm px-4 py-2.5 rounded-lg border {{ app()->getLocale() == 'en' ? 'border-indigo-500 bg-indigo-50 text-indigo-600 font-semibold' : 'border-slate-200' }}">🇬🇧 English</a>
       </div>
       @if(session()->has('admin_id'))
-        <a href="{{ route('admin.dashboard') }}" class="block text-sm px-3 py-2 rounded bg-indigo-600 text-white text-center">Admin</a>
-        <form action="{{ route('admin.logout') }}" method="POST" class="mt-2">
-          @csrf
-          <button type="submit" class="w-full text-sm px-3 py-2 rounded border hover:bg-gray-100 text-center">Logout</button>
-        </form>
+        <div class="px-4 pb-4">
+          <a href="{{ route('admin.dashboard') }}" class="block text-center text-sm px-4 py-2.5 rounded-lg bg-indigo-600 text-white">Admin Dashboard</a>
+          <form action="{{ route('admin.logout') }}" method="POST" class="mt-2">
+            @csrf
+            <button type="submit" class="w-full text-sm px-4 py-2.5 rounded-lg border hover:bg-slate-50 text-center">Logout</button>
+          </form>
+        </div>
       @else
-        <a href="{{ route('admin.login') }}" class="block text-sm px-3 py-2 rounded border hover:bg-gray-100 text-center">Admin Login</a>
+        <div class="px-4 pb-4">
+          <a href="{{ route('admin.login') }}" class="block text-center text-sm px-4 py-2.5 rounded-lg border hover:bg-slate-50">Admin Login</a>
+        </div>
       @endif
-    </div>
     </div>
   </header>
 
   {{-- Main area --}}
-  <main class="flex-1 container mx-auto px-4 py-8 w-full">
+  <main class="flex-1 w-full">
+    <div class="container mx-auto px-4 py-6 md:py-8">
     {{-- Flash messages --}}
     @if(session('success'))
-      <div class="mb-4 p-3 rounded border-l-4 border-green-500 bg-green-50 text-green-800">
+      <div class="mb-4 p-4 rounded-lg border-l-4 border-green-500 bg-green-50 text-green-800 text-sm">
         {{ session('success') }}
       </div>
     @endif
 
     @if(session('error'))
-      <div class="mb-4 p-3 rounded border-l-4 border-red-500 bg-red-50 text-red-800">
+      <div class="mb-4 p-4 rounded-lg border-l-4 border-red-500 bg-red-50 text-red-800 text-sm">
         {{ session('error') }}
       </div>
     @endif
 
     @if($errors->any())
-      <div class="mb-4 p-3 rounded border-l-4 border-yellow-500 bg-yellow-50 text-yellow-800">
-        <ul class="list-disc pl-5">
+      <div class="mb-4 p-4 rounded-lg border-l-4 border-yellow-500 bg-yellow-50 text-yellow-800 text-sm">
+        <ul class="list-disc pl-4 space-y-1">
           @foreach($errors->all() as $err)
             <li>{{ $err }}</li>
           @endforeach
@@ -165,15 +158,18 @@
 
     {{-- Content --}}
     @yield('content')
+    </div>
   </main>
 
   {{-- Footer --}}
-  <footer class="bg-white border-t">
-    <div class="container mx-auto px-4 py-6 text-sm text-gray-600 flex flex-col md:flex-row justify-between items-center gap-3">
-      <div>© {{ date('Y') }} Ijen Driver — All rights reserved.</div>
-      <div>
-        <a href="#" class="hover:text-indigo-600 mr-3">Terms</a>
-        <a href="#" class="hover:text-indigo-600">Privacy</a>
+  <footer class="bg-white border-t mt-auto">
+    <div class="container mx-auto px-4 py-6">
+      <div class="flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-gray-600">
+        <div class="text-center md:text-left">© {{ date('Y') }} Ijen Driver — All rights reserved.</div>
+        <div class="flex items-center gap-4">
+          <a href="#" class="hover:text-indigo-600 transition">Terms</a>
+          <a href="#" class="hover:text-indigo-600 transition">Privacy</a>
+        </div>
       </div>
     </div>
   </footer>
