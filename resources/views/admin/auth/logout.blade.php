@@ -3,25 +3,19 @@
 @section('title', 'Logout | Ijen Driver')
 
 @section('content')
-<div class="max-w-lg mx-auto bg-white rounded-xl shadow p-8 text-center">
-  <h1 class="text-2xl font-semibold mb-3 text-gray-800">Logout Admin</h1>
-  <p class="text-gray-600 mb-6">
-    Apakah kamu yakin ingin keluar dari sesi admin sekarang?
-  </p>
+<div class="mx-auto max-w-lg py-8">
+    <section class="surface-card p-6 text-center sm:p-8">
+        <h1 class="text-2xl font-semibold text-slate-900">Logout Admin</h1>
+        <p class="mt-2 text-sm text-slate-600">Apakah kamu yakin ingin keluar dari sesi admin sekarang?</p>
 
-  <div class="flex justify-center gap-4">
-    <form action="{{ route('admin.logout') }}" method="POST">
-      @csrf
-      <button type="submit"
-        class="bg-red-600 hover:bg-red-700 text-white font-semibold px-6 py-2 rounded-lg transition">
-        Ya, Logout
-      </button>
-    </form>
+        <div class="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-center">
+            <form action="{{ route('admin.logout') }}" method="POST" class="w-full sm:w-auto">
+                @csrf
+                <button type="submit" class="inline-flex w-full items-center justify-center rounded-xl bg-rose-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-rose-700">Ya, Logout</button>
+            </form>
 
-    <a href="{{ route('admin.dashboard') }}"
-      class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold px-6 py-2 rounded-lg transition">
-      Batal
-    </a>
-  </div>
+            <a href="{{ route('admin.dashboard') }}" class="btn-secondary w-full justify-center sm:w-auto">Batal</a>
+        </div>
+    </section>
 </div>
 @endsection

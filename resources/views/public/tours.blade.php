@@ -4,65 +4,61 @@
 @section('meta_description', __('public.tours_page_subtitle'))
 
 @section('content')
-<section class="bg-gradient-to-r from-indigo-600 to-teal-500 text-white">
-    <div class="container mx-auto px-4 py-10 sm:py-14 text-center">
-        <h1 class="text-3xl sm:text-4xl md:text-5xl font-extrabold mb-3 sm:mb-4">{{ __('public.tours_page_title') }}</h1>
-        <p class="text-base sm:text-lg text-white/90">{{ __('public.tours_page_subtitle') }}</p>
-    </div>
-</section>
+<div class="space-y-8 sm:space-y-10">
+    <section class="page-hero content-reveal">
+        <div class="relative z-10 max-w-3xl">
+            <span class="hero-kicker">{{ __('public.tours_kicker') }}</span>
+            <h1 class="text-3xl font-bold text-white sm:text-4xl md:text-5xl">{{ __('public.tours_page_title') }}</h1>
+            <p class="mt-3 text-sm text-white/90 sm:text-base">{{ __('public.tours_page_subtitle') }}</p>
+        </div>
+    </section>
 
-<section class="container mx-auto px-4 py-8 sm:py-10">
     @if($tours->count() > 0)
-        <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        <section class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             @foreach($tours as $tour)
-                <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden hover:shadow-lg transition duration-300 group">
+                <article class="group flex h-full flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-xl">
                     @if($tour->image)
-                        <img src="{{ asset('storage/'.$tour->image) }}" alt="{{ $tour->title }}" class="h-44 sm:h-48 w-full object-cover group-hover:scale-105 transition duration-300">
+                        <img src="{{ asset('storage/' . $tour->image) }}" alt="{{ $tour->title }}" class="h-48 w-full object-cover transition duration-300 group-hover:scale-[1.03]">
                     @else
-                        <div class="h-44 sm:h-48 w-full bg-gray-200 flex items-center justify-center">
-                            <span class="text-gray-500">{{ __('public.no_journal_image') }}</span>
-                        </div>
+                        <div class="flex h-48 items-center justify-center bg-slate-100 text-sm font-medium text-slate-500">{{ __('public.no_image') }}</div>
                     @endif
 
-                    <div class="p-4 sm:p-5">
-                        <h2 class="font-semibold text-base sm:text-lg mb-2 line-clamp-1">{{ $tour->title }}</h2>
+                    <div class="flex flex-1 flex-col p-5">
+                        <h2 class="line-clamp-1 text-lg font-semibold text-slate-900">{{ $tour->title }}</h2>
 
                         @if($tour->location)
-                            <p class="text-slate-600 text-sm mb-2 flex items-center">
-                                <svg class="w-4 h-4 mr-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                            <p class="mt-2 inline-flex items-center gap-1.5 text-sm text-slate-600">
+                                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                                 </svg>
                                 <span class="truncate">{{ $tour->location }}</span>
                             </p>
                         @endif
 
-                        <p class="text-slate-600 text-sm mb-4 line-clamp-2">{{ \Str::limit($tour->description, 80) }}</p>
+                        <p class="mt-3 line-clamp-2 text-sm text-slate-600">{{ \Str::limit($tour->description, 100) }}</p>
 
-                        <div class="flex justify-between items-center gap-3">
+                        <div class="mt-5 flex items-center justify-between gap-3">
                             @if($tour->show_price)
-                                <span class="text-lg font-bold text-indigo-600">Rp {{ number_format($tour->price, 0, ',', '.') }}</span>
+                                <span class="text-lg font-bold text-teal-700">Rp {{ number_format($tour->price, 0, ',', '.') }}</span>
                             @else
                                 <span class="text-sm font-semibold text-slate-500">{{ __('public.price_hidden') }}</span>
                             @endif
-                            <a href="{{ route('tour.show', $tour) }}"
-                               class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition text-sm font-medium touch-manipulation">
-                                {{ __('public.read_more') }}
-                            </a>
+
+                            <a href="{{ route('tour.show', $tour) }}" class="btn-primary">{{ __('public.read_more') }}</a>
                         </div>
                     </div>
-                </div>
+                </article>
             @endforeach
-        </div>
+        </section>
 
-        <div class="mt-8">
+        <div>
             {{ $tours->links('pagination::tailwind') }}
         </div>
     @else
-        <div class="text-center py-10 sm:py-12">
-            <div class="text-4xl mb-3">🏝️</div>
-            <p class="text-slate-500">{{ __('public.no_tours') }}</p>
-        </div>
+        <section class="empty-state">
+            <p class="text-sm text-slate-500">{{ __('public.no_tours') }}</p>
+        </section>
     @endif
-</section>
+</div>
 @endsection
